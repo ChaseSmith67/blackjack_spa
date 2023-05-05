@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 // import Deck from "./components/Deck";
 // import Hand from "./components/Hand";
+import './styles.css';
 
 function App() {
 
@@ -71,13 +72,13 @@ function App() {
     <div className="App">
 
       <h1>Dealer's Cards</h1>
-      <div class='hand' id='dealer-hand'>
-        {dealerHand.map( e => <div class='card'> {e} </div>)}
+      <div className='hand' id='dealer-hand'>
+        {dealerHand.map( e => <div className='card'> {e} </div>)}
         </div>
 
       <h1>Your Cards</h1>
-      <div class='hand' id='player-hand'>
-        {playerHand.map( e => <div class='card'> {e} </div>)}
+      <div className='hand' id='player-hand'>
+        {playerHand.map( e => <div className='card'> {e} </div>)}
       </div>
 
       <button onClick={() => {newHand()}}>Deal</button>
