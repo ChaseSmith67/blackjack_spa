@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 // import Deck from "./components/Deck";
 // import Hand from "./components/Hand";
-import './styles.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 function App() {
 
@@ -71,10 +74,19 @@ function App() {
   return (
     <div className="App">
 
+      <Container>
       <h1>Dealer's Cards</h1>
       <div className='hand' id='dealer-hand'>
         {dealerHand.map( e => <div className='card'> {e} </div>)}
         </div>
+      </Container>
+      <Container>
+        <h1>Dealer's Cards</h1>
+        <Row>
+          {dealerHand.map( e => (<td><p> {e} </p></td>))}
+        </Row>
+      </Container>
+
 
       <h1>Your Cards</h1>
       <div className='hand' id='player-hand'>
