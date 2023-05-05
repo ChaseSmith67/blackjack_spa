@@ -29,8 +29,11 @@ function App() {
 
   const [dealerHand, setDealerHand] = useState([]);
   const [playerHand, setPlayerHand] = useState([]);
-  // const [deck, setDeck] = useState(newDeck());
+  const [deck, setDeck] = useState(newDeck);
   // const [count, setCount] = useState(0);
+  const [playerTurn, setPlayerTurn] = useState(true);
+  const [playerHandValue, setPlayerHandValue] = useState(0);
+  const [dealerHandValue, setDealerHandValue] = useState(0);
 
 
   // function drawCard() {
@@ -40,15 +43,36 @@ function App() {
   //   return card;
   // };
 
+  const evalCard = (card) => {
+    switch (card[0]) {
+      case "K":
+      case "Q":
+      case "J":
+      case "1":
+        return 10;
+      case "A":
+        return 11;
+      default:
+        return parseInt(card[0]);
+    };
+  };
+
   const dealPlayer = (deck) => {
     let card = deck.shift();
+    let handVal = evalCard(card) + playerHandValue;
+    setPlayerHandValue(handVal);
     setPlayerHand(playerHand => [...playerHand, card]);
+    let updatedDeck = deck;
+    setDeck(updatedDeck);
   };
 
    const dealDealer = (deck) => {
     let card = deck.shift();
+    let handVal = evalCard(card) + dealerHandValue;
+    setDealerHandValue(handVal);
     setDealerHand(dealerHand => [...dealerHand, card]);
-    
+    let updatedDeck = deck;
+    setDeck(updatedDeck);
    };
 
    const newHand = () => {
@@ -56,8 +80,13 @@ function App() {
     setDealerHand([]);
     setPlayerHand([]);
 
-    // Create new deck
-    let deck = newDeck();
+    // Reset hand values
+    setDealerHandValue(dealerHandValue - dealerHandValue);
+    setPlayerHandValue(0);
+
+    // // Create new deck
+    // let freshDeck = newDeck();
+    // setDeck(deck => newDeck());
 
     // Deal Cards
     dealPlayer(deck);
@@ -76,6 +105,7 @@ function App() {
           <div className="d-flex justify-content-center">
           {dealerHand.map( e => (<td><Container className="card"> {e} </Container></td>))}
           </div>
+          <div className="d-flex justify-content-center">{ dealerHandValue }</div>
       </Container>
 
 
@@ -84,6 +114,7 @@ function App() {
           <div className="d-flex justify-content-center">
           {playerHand.map( e => (<td><Container className="card"> {e} </Container></td>))}
           </div>
+          <div className="d-flex justify-content-center">{ playerHandValue }</div>
       </Container>
 
 
@@ -93,7 +124,7 @@ function App() {
       <div className="d-flex justify-content-center">
         <div className="btn-group btn-group-lg p-3 b-1">
           <button type="button" className="btn btn-primary"
-            onClick={() => console.log('hit')}>Hit</button>
+            onClick={() => {dealPlayer(deck)}}>Hit</button>
           <button type="button" className="btn btn-primary"
             onClick={() => console.log('stand')}>Stand</button>
           <button type="button" className="btn btn-primary"
