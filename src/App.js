@@ -5,6 +5,7 @@ import './App.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 
 function App() {
 
@@ -74,27 +75,27 @@ function App() {
   return (
     <div className="App">
 
+      <Container className="p-3">
+      
+      <Jumbotron>
       <Container>
-      <h1>Dealer's Cards</h1>
-      <div className='hand' id='dealer-hand'>
-        {dealerHand.map( e => <div className='card'> {e} </div>)}
-        </div>
-      </Container>
-      <Container>
-        <h1>Dealer's Cards</h1>
+        <h1 className="header">Dealer's Cards</h1>
         <Row>
           {dealerHand.map( e => (<td><p> {e} </p></td>))}
         </Row>
       </Container>
 
 
-      <h1>Your Cards</h1>
-      <div className='hand' id='player-hand'>
-        {playerHand.map( e => <div className='card'> {e} </div>)}
-      </div>
+      <Container>
+        <h1 className="header">Your Cards</h1>
+        <Row>
+          {playerHand.map( e => (<td><p> {e} </p></td>))}
+        </Row>
+      </Container>
 
       <button onClick={() => {newHand()}}>Deal</button>
-
+      </Jumbotron>
+      </Container>
     </div>
   );
 }
