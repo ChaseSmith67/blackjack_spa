@@ -26,18 +26,37 @@ function App() {
     setPlayerHand(playerHand => [...playerHand, drawCard()]);
   };
 
+   const dealDealer = () => {
+    setDealerHand(dealerHand => [...dealerHand, drawCard()]);
+   };
+
+   const newHand = () => {
+    // Clear hands
+    setDealerHand([]);
+    setPlayerHand([]);
+
+    // Deal Cards
+    dealPlayer();
+    dealDealer();
+    dealPlayer();
+    dealDealer();
+
+   };
+
   return (
     <div className="App">
 
       <h1>Dealer's Cards</h1>
-      <div>{dealerHand}</div>
+      <div class='hand' id='dealer-hand'>
+        {dealerHand.map( e => <div class='card'> {e} </div>)}
+        </div>
 
       <h1>Your Cards</h1>
-      <div>
-        {playerHand}
+      <div class='hand' id='player-hand'>
+        {playerHand.map( e => <div class='card'> {e} </div>)}
       </div>
 
-      <button onClick={() => {dealPlayer()}}>Deal</button>
+      <button onClick={() => {newHand()}}>Deal</button>
 
     </div>
   );
