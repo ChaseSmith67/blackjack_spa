@@ -10,10 +10,7 @@ function PlayerHand(props) {
     
     
 
-    const addCard = (card, value) => {
-        setPlayerHand([...playerHand, card]);
-        setPlayerHandValue(playerHandValue + value);
-    }
+
 
   return (
     <Container className="p-5 mb-4 bg-light rounded-3">
