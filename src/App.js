@@ -30,15 +30,26 @@ function App() {
 
   const [deck, setDeck] = useState(newDeck);
   // const [count, setCount] = useState(0);
-  // const [playerTurn, setPlayerTurn] = useState(true);
+  const [playerTurn, setPlayerTurn] = useState(false);
+  const [gameOver, setGameOver] = useState(true);
   const [playerHand, setPlayerHand] = useState({cards: [], value: 0, });
   const [dealerHand, setDealerHand] = useState({cards: [], value: 0, });
 
   const clearTable = () => {
     setPlayerHand((prev) => ({ ...prev, cards: [] }));
     setDealerHand((prev) => ({ ...prev, cards: [] }));
+    // Create new deck
+    let freshDeck = newDeck();
+    setDeck({...freshDeck});
   };
 
+  // useEffect(() => {
+  //   console.log('useEffect called');
+  //   if (deck.length < 20 && gameOver) {
+  //     setDeck(newDeck);
+  //   }}, [gameOver, deck]);
+
+  // Recalculate value of player's hand
   useEffect(() => {
     setPlayerHand(prev => ({...prev, value: 0 }));
     for (let i = 0; i < playerHand.cards.length; i++) {
@@ -47,6 +58,7 @@ function App() {
     }
   }, [playerHand.cards]);
 
+  // Recalculate value of dealer's hand
   useEffect(() => {
     setDealerHand(prev => ({...prev, value: 0 }));
     for (let i = 0; i < dealerHand.cards.length; i++) {
@@ -54,6 +66,7 @@ function App() {
       setDealerHand(prev => ({...prev, value: prev.value + cardVal }));
     }
   }, [dealerHand.cards]);
+
 
 
   const evalCard = (card) => {
@@ -84,15 +97,17 @@ function App() {
     setDeck(updatedDeck);
   };
 
-   
+   const playerHit = () => {
+    if (playerTurn) {
+      dealPlayer(deck);
+    } else {
+      window.alert("It's not your turn!");
+    }
+  };
 
-   const newHand = () => {
+   const newHand = (deck) => {
     // Clear hands
     clearTable();
-
-    // // Create new deck
-    // let freshDeck = newDeck();
-    // setDeck(deck => newDeck());
 
     // Deal Cards
     dealPlayer(deck);
@@ -102,7 +117,32 @@ function App() {
     dealPlayer(deck);
     dealDealer(deck);
 
+    setPlayerTurn(true);
    };
+
+   const dealerTurn = () => {
+    setPlayerTurn(false);
+    if (dealerHand.value < 17) {
+      dealDealer(deck);
+      dealerTurn();
+          } else{
+          evalHands();
+          }
+        };
+    
+    const evalHands = () => {
+      if (dealerHand.value > 21) {
+        window.alert("Dealer busts!")
+      } else if (dealerHand.value < 17) {
+        // dealerTurn();
+        // window.alert("Dealer should hit...")
+      } else {
+        if (playerHand.value > dealerHand.value) {
+          window.alert("Player wins!")
+        } else {
+          window.alert("Dealer wins!")
+        }
+      }};
 
   return (
     <Container className="p-3">
@@ -125,14 +165,14 @@ function App() {
 
 
       <button type="button" className="btn btn-primary p-3 b-1"
-        onClick={() => {newHand()}}>Deal</button>
+        onClick={() => {newHand(newDeck())}}>Deal</button>
 
       <div className="d-flex justify-content-center">
         <div className="btn-group btn-group-lg p-3 b-1">
           <button type="button" className="btn btn-primary"
-            onClick={() => {dealPlayer(deck)}}>Hit</button>
+            onClick={() => {playerHit()}}>Hit</button>
           <button type="button" className="btn btn-primary"
-            onClick={() => console.log('stand')}>Stand</button>
+            onClick={() => {dealerTurn()}}>Stand</button>
           <button type="button" className="btn btn-primary"
             onClick={() => console.log('double')}>Double</button>
           <button type="button" className="btn btn-primary"
