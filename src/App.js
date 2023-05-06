@@ -100,6 +100,12 @@ function App() {
   }, [dealerHand.cards, dealerHand.value]);
 
   useEffect(() => {
+    if (playerTurn &&!gameOver) {
+      dealerHand.cards[0] = "??";
+    }
+  }, [playerTurn, gameOver]);
+
+  useEffect(() => {
     console.log('message', message);
   }, [message]);
 
@@ -113,6 +119,8 @@ function App() {
         return 10;
       case "A":
         return 11;
+      case "?":
+        return 0;
       default:
         return parseInt(card[0]);
     };
@@ -154,36 +162,11 @@ function App() {
     dealPlayer(deck);
     dealDealer(deck);
 
-    // Check for dealer blackjack
-    // if (!blackjackCheck()) {
     setPlayerTurn(true);
     setMessage("Player's turn!");
     // };
    };
 
-   const blackjackCheck = () => {
-    if (dealerHand.value == 21) {
-      setMessage("Dealer Blackjack!");
-      setGameOver(true);
-      return true;
-    // Check for player blackjack
-    } else if (playerHand.value == 21) {
-      setMessage("Blackjack!");
-      setGameOver(true);
-      return true;
-    } else {
-      return false;
-    }
-  };
-  //  const dealerTurn = () => {
-  //   setPlayerTurn(false);
-  //   if (dealerHand.value < 17) {
-  //     dealDealer(deck);
-  //     dealerTurn();
-  //         } else{
-  //         evalHands();
-  //         }
-  //       };
     
     const evalHands = () => {
       
