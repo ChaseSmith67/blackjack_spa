@@ -27,21 +27,34 @@ function App() {
   };
 
 
-  const [dealerHand, setDealerHand] = useState([]);
-  const [playerHand, setPlayerHand] = useState([]);
+
   const [deck, setDeck] = useState(newDeck);
   // const [count, setCount] = useState(0);
-  const [playerTurn, setPlayerTurn] = useState(true);
-  const [playerHandValue, setPlayerHandValue] = useState(0);
-  const [dealerHandValue, setDealerHandValue] = useState(0);
+  // const [playerTurn, setPlayerTurn] = useState(true);
+  const [playerHand, setPlayerHand] = useState({cards: [], value: 0, });
+  const [dealerHand, setDealerHand] = useState({cards: [], value: 0, });
 
+  const clearTable = () => {
+    setPlayerHand((prev) => ({ ...prev, cards: [] }));
+    setDealerHand((prev) => ({ ...prev, cards: [] }));
+  };
 
-  // function drawCard() {
-  //   let card = deck[0];
-  //   console.log(deck);
-  //   setDeck(deck.slice(1));
-  //   return card;
-  // };
+  useEffect(() => {
+    setPlayerHand(prev => ({...prev, value: 0 }));
+    for (let i = 0; i < playerHand.cards.length; i++) {
+      let cardVal = evalCard(playerHand.cards[i]);
+      setPlayerHand(prev => ({...prev, value: prev.value + cardVal }));
+    }
+  }, [playerHand.cards]);
+
+  useEffect(() => {
+    setDealerHand(prev => ({...prev, value: 0 }));
+    for (let i = 0; i < dealerHand.cards.length; i++) {
+      let cardVal = evalCard(dealerHand.cards[i]);
+      setDealerHand(prev => ({...prev, value: prev.value + cardVal }));
+    }
+  }, [dealerHand.cards]);
+
 
   const evalCard = (card) => {
     switch (card[0]) {
@@ -59,30 +72,23 @@ function App() {
 
   const dealPlayer = (deck) => {
     let card = deck.shift();
-    let handVal = evalCard(card) + playerHandValue;
-    setPlayerHandValue(handVal);
-    setPlayerHand(playerHand => [...playerHand, card]);
+    setPlayerHand(prev => ({cards: [...prev.cards, card]}));
     let updatedDeck = deck;
     setDeck(updatedDeck);
   };
 
-   const dealDealer = (deck) => {
+  const dealDealer = (deck) => {
     let card = deck.shift();
-    let handVal = evalCard(card) + dealerHandValue;
-    setDealerHandValue(handVal);
-    setDealerHand(dealerHand => [...dealerHand, card]);
+    setDealerHand(prev => ({cards: [...prev.cards, card]}));
     let updatedDeck = deck;
     setDeck(updatedDeck);
-   };
+  };
+
+   
 
    const newHand = () => {
     // Clear hands
-    setDealerHand([]);
-    setPlayerHand([]);
-
-    // Reset hand values
-    setDealerHandValue(dealerHandValue - dealerHandValue);
-    setPlayerHandValue(0);
+    clearTable();
 
     // // Create new deck
     // let freshDeck = newDeck();
@@ -103,18 +109,18 @@ function App() {
       <Container className="p-5 mb-4 bg-light rounded-3">
         <h1 className="header">Dealer's Cards</h1>
           <div className="d-flex justify-content-center">
-          {dealerHand.map( e => (<td><Container className="card"> {e} </Container></td>))}
+          {dealerHand.cards.map( e => (<td><Container className="card"> {e} </Container></td>))}
           </div>
-          <div className="d-flex justify-content-center">{ dealerHandValue }</div>
+          <div className="d-flex justify-content-center">{ dealerHand.value }</div>
       </Container>
 
 
       <Container className="p-5 mb-4 bg-light rounded-3">
         <h1 className="header">Your Cards</h1>
           <div className="d-flex justify-content-center">
-          {playerHand.map( e => (<td><Container className="card"> {e} </Container></td>))}
+          {playerHand.cards.map( e => (<td><Container className="card"> {e} </Container></td>))}
           </div>
-          <div className="d-flex justify-content-center">{ playerHandValue }</div>
+          <div className="d-flex justify-content-center">{ playerHand.value }</div>
       </Container>
 
 
