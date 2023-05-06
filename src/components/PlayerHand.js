@@ -3,10 +3,12 @@ import Deck from './Deck';
 import Container from 'react-bootstrap/Container';
 
 
-function PlayerHand() {
+function PlayerHand(props) {
 
-    const [playerHand, setPlayerHand] = useState([]);
-    const [playerHandValue, setPlayerHandValue] = useState(0);
+    const playerHand = props.playerHand;
+    const playerHandValue = props.playerHandValue;
+    
+    
 
     const addCard = (card, value) => {
         setPlayerHand([...playerHand, card]);
