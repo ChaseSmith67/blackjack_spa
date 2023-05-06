@@ -68,7 +68,11 @@ function App() {
       let cardVal = evalCard(playerHand.cards[i]);
       setPlayerHand(prev => ({...prev, value: prev.value + cardVal }));
     }
-    if (playerHand.value > 21) {
+    if (playerHand.value === 21 && playerHand.cards.length === 2) {
+      setMessage('Blackjack!');
+      setPlayerTurn(false);
+      setGameOver(true);
+    } else if (playerHand.value > 21) {
       setPlayerTurn(false);
       setGameOver(true);
       setMessage('Player Busts!');
@@ -82,7 +86,18 @@ function App() {
       let cardVal = evalCard(dealerHand.cards[i]);
       setDealerHand(prev => ({...prev, value: prev.value + cardVal }));
     }
-  }, [dealerHand.cards]);
+    if (dealerHand.value === 21 && dealerHand.cards.length === 2) {
+      setMessage('Dealer Blackjack!');
+      setPlayerTurn(false);
+      setDealerTurn(false);
+      setGameOver(true);
+    } else if (dealerHand.value > 21) {
+      setDealerTurn(false);
+      setGameOver(true);
+      setPlayerTurn(false);
+      setMessage('Dealer Busts!');
+    };
+  }, [dealerHand.cards, dealerHand.value]);
 
   useEffect(() => {
     console.log('message', message);
@@ -139,10 +154,27 @@ function App() {
     dealPlayer(deck);
     dealDealer(deck);
 
+    // Check for dealer blackjack
+    // if (!blackjackCheck()) {
     setPlayerTurn(true);
     setMessage("Player's turn!");
+    // };
    };
 
+   const blackjackCheck = () => {
+    if (dealerHand.value == 21) {
+      setMessage("Dealer Blackjack!");
+      setGameOver(true);
+      return true;
+    // Check for player blackjack
+    } else if (playerHand.value == 21) {
+      setMessage("Blackjack!");
+      setGameOver(true);
+      return true;
+    } else {
+      return false;
+    }
+  };
   //  const dealerTurn = () => {
   //   setPlayerTurn(false);
   //   if (dealerHand.value < 17) {
@@ -156,16 +188,20 @@ function App() {
     const evalHands = () => {
       
       if (dealerHand.value > 21) {
-        window.alert("Dealer busts!")
+        setMessage("Dealer busts!");
       } else if (playerHand.value > 21) {
-        setMessage("Player busts!")
+        setMessage("Player busts!");
       } else {
-        if (playerHand.value > dealerHand.value) {
-          window.alert("Player wins!")
+        if (playerHand.value === 21 && playerHand.cards.length === 2 && dealerHand.value !== 21) {
+          setMessage("Blackjack!");
+        } else if (playerHand.value !== 21 && dealerHand.value === 21 && dealerHand.cards.length === 2) {
+          setMessage("Dealer Blackjack!");
+        } else if (playerHand.value > dealerHand.value) {
+          setMessage("Player wins!");
           } else if (playerHand.value < dealerHand.value) {
-            window.alert("Dealer wins!")
+            setMessage("Dealer wins!");
           } else {
-            window.alert("Push")
+            setMessage("Push!");
         }
       }
       setGameOver(true);
