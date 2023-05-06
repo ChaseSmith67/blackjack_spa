@@ -30,10 +30,12 @@ function App() {
 
   const [deck, setDeck] = useState(newDeck);
   // const [count, setCount] = useState(0);
-  const [playerTurn, setPlayerTurn] = useState(false);
-  const [gameOver, setGameOver] = useState(true);
+  const [playerTurn, setPlayerTurn] = useState(null);
+  const [gameOver, setGameOver] = useState(null);
+  const [dealerTurn, setDealerTurn] = useState(null);
   const [playerHand, setPlayerHand] = useState({cards: [], value: 0, });
   const [dealerHand, setDealerHand] = useState({cards: [], value: 0, });
+  const [message, setMessage] = useState('');
 
   const clearTable = () => {
     setPlayerHand((prev) => ({ ...prev, cards: [] }));
@@ -43,11 +45,21 @@ function App() {
     setDeck({...freshDeck});
   };
 
-  // useEffect(() => {
-  //   console.log('useEffect called');
-  //   if (deck.length < 20 && gameOver) {
-  //     setDeck(newDeck);
-  //   }}, [gameOver, deck]);
+  useEffect(() => {
+    console.log('useEffect called',
+    'playerTurn =', playerTurn,
+    'gameOver =', gameOver,
+    'dealerTurn =', dealerTurn);
+    if (!playerTurn && !gameOver && dealerTurn) {
+      if (dealerHand.value < 17) {
+        dealDealer(deck);
+      } else {
+        setDealerTurn(false);
+        setGameOver(true);
+      }
+    } else if (!playerTurn && gameOver && !dealerTurn) {
+      evalHands();
+    }}, [playerTurn, gameOver, dealerHand, dealerTurn]);
 
   // Recalculate value of player's hand
   useEffect(() => {
@@ -56,7 +68,12 @@ function App() {
       let cardVal = evalCard(playerHand.cards[i]);
       setPlayerHand(prev => ({...prev, value: prev.value + cardVal }));
     }
-  }, [playerHand.cards]);
+    if (playerHand.value > 21) {
+      setPlayerTurn(false);
+      setGameOver(true);
+      setMessage('Player Busts!');
+    };
+  }, [playerHand.cards, playerHand.value]);
 
   // Recalculate value of dealer's hand
   useEffect(() => {
@@ -67,6 +84,9 @@ function App() {
     }
   }, [dealerHand.cards]);
 
+  useEffect(() => {
+    console.log('message', message);
+  }, [message]);
 
 
   const evalCard = (card) => {
@@ -108,6 +128,8 @@ function App() {
    const newHand = (deck) => {
     // Clear hands
     clearTable();
+    setGameOver(false);
+    setDealerTurn(false);
 
     // Deal Cards
     dealPlayer(deck);
@@ -118,31 +140,46 @@ function App() {
     dealDealer(deck);
 
     setPlayerTurn(true);
+    setMessage("Player's turn!");
    };
 
-   const dealerTurn = () => {
-    setPlayerTurn(false);
-    if (dealerHand.value < 17) {
-      dealDealer(deck);
-      dealerTurn();
-          } else{
-          evalHands();
-          }
-        };
+  //  const dealerTurn = () => {
+  //   setPlayerTurn(false);
+  //   if (dealerHand.value < 17) {
+  //     dealDealer(deck);
+  //     dealerTurn();
+  //         } else{
+  //         evalHands();
+  //         }
+  //       };
     
     const evalHands = () => {
+      
       if (dealerHand.value > 21) {
         window.alert("Dealer busts!")
-      } else if (dealerHand.value < 17) {
-        // dealerTurn();
-        // window.alert("Dealer should hit...")
+      } else if (playerHand.value > 21) {
+        setMessage("Player busts!")
       } else {
         if (playerHand.value > dealerHand.value) {
           window.alert("Player wins!")
-        } else {
-          window.alert("Dealer wins!")
+          } else if (playerHand.value < dealerHand.value) {
+            window.alert("Dealer wins!")
+          } else {
+            window.alert("Push")
         }
-      }};
+      }
+      setGameOver(true);
+    };
+
+    const endTurn = () => {
+      if (playerTurn) {
+        setDealerTurn(true);
+        setPlayerTurn(false);
+        setGameOver(false);
+      } else {
+        window.alert("It's not your turn!");
+      }
+    };
 
   return (
     <Container className="p-3">
@@ -167,12 +204,14 @@ function App() {
       <button type="button" className="btn btn-primary p-3 b-1"
         onClick={() => {newHand(newDeck())}}>Deal</button>
 
+      <div className="d-flex justify-content-center">{ message }</div>
+
       <div className="d-flex justify-content-center">
         <div className="btn-group btn-group-lg p-3 b-1">
           <button type="button" className="btn btn-primary"
             onClick={() => {playerHit()}}>Hit</button>
           <button type="button" className="btn btn-primary"
-            onClick={() => {dealerTurn()}}>Stand</button>
+            onClick={() => {endTurn()}}>Stand</button>
           <button type="button" className="btn btn-primary"
             onClick={() => console.log('double')}>Double</button>
           <button type="button" className="btn btn-primary"
