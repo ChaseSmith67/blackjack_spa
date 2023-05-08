@@ -133,7 +133,7 @@ function App() {
     setDeck(updatedDeck);
   };
 
-  const dealDealer = (deck) => {
+  const dealDealer = (deck, visible=true) => {
     let card = deck.shift();
     setDealerHand(prev => ({cards: [...prev.cards, card]}));
     let updatedDeck = deck;
