@@ -50,7 +50,6 @@ function App() {
 
 
   const [deck, setDeck] = useState(newDeck);
-  // const [count, setCount] = useState(0);
   const [playerTurn, setPlayerTurn] = useState(null);
   const [gameOver, setGameOver] = useState(null);
   const [dealerTurn, setDealerTurn] = useState(null);
@@ -58,6 +57,7 @@ function App() {
   const [dealerHand, setDealerHand] = useState({cards: [], value: 0, });
   const [message, setMessage] = useState('');
 
+// Resets Hands and Deck
   const clearTable = () => {
     setPlayerHand((prev) => ({ ...prev, cards: [] }));
     setDealerHand((prev) => ({ ...prev, cards: [] }));
@@ -71,7 +71,11 @@ function App() {
     'playerTurn =', playerTurn,
     'gameOver =', gameOver,
     'dealerTurn =', dealerTurn);
-    if (!playerTurn && !gameOver && dealerTurn) {
+    if (playerTurn && !gameOver && !dealerTurn) {
+      dealerHand.cards[0].visible = false;
+    }
+    else if (!playerTurn && !gameOver && dealerTurn) {
+      dealerHand.cards[0].visible = true;
       if (dealerHand.value < 17) {
         dealDealer(deck);
       } else {
@@ -104,8 +108,10 @@ function App() {
   useEffect(() => {
     setDealerHand(prev => ({...prev, value: 0 }));
     for (let i = 0; i < dealerHand.cards.length; i++) {
+      if (dealerHand.cards[i].visible) {
       let cardVal = evalCard(dealerHand.cards[i]);
       setDealerHand(prev => ({...prev, value: prev.value + cardVal }));
+      };
     }
     if (dealerHand.value === 21 && dealerHand.cards.length === 2) {
       setMessage('Dealer Blackjack!');
@@ -120,13 +126,6 @@ function App() {
     };
   }, [dealerHand.cards, dealerHand.value]);
 
-  /* This is to hide the dealer's first card. Haven't totally
-      worked it out yet. */
-  // useEffect(() => {
-  //   if (playerTurn &&!gameOver) {
-  //     dealerHand.cards[0] = "??";
-  //   }
-  // }, [playerTurn, gameOver]);
 
   useEffect(() => {
     console.log('message', message);
@@ -226,11 +225,19 @@ function App() {
       <Container className="p-5 mb-4 bg-light rounded-3">
         <h1 className="header">Dealer's Cards</h1>
           <div className="d-flex justify-content-center">
-          {dealerHand.cards.map( e => (<td><Container className="card p-0">
+          {dealerHand.cards.map(function(e) { 
+            if (e.visible) {
+              return (<td><Container className="card p-0">
              <img src={e.image} alt="" width="100" height="150"/>
-              </Container></td>))}
+              </Container></td>)
+            } else {
+              return (<td><Container className="card p-0">
+              <img src='images/Back_Covers/Pomegranate.png' alt="" width='100' height='150' />
+              </Container></td>)
+              }})}
           </div>
-          <div className="d-flex justify-content-center">{ dealerHand.value }</div>
+          <div className="d-flex justify-content-center">{ dealerHand.value } </div>
+
       </Container>
 
 
