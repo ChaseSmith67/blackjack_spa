@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import Deck from "./components/Deck";
-// import "./components/Card.js";
 import './App.css';
 import Container from 'react-bootstrap/Container';
 
@@ -17,12 +15,6 @@ class Card {
 function App() {
 
   const newDeck = () => {
-    // let deck = ['AH', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', '10H', 'JH', 'QH', 'KH',
-    //               'AC', '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', '10C', 'JC', 'QC', 'KC',
-    //               'AD', '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', '10D', 'JD', 'QD', 'KD',
-    //               'AS', '2S', '3S', '4S', '5S', '6S', '7S', '8S', '9S', '10S', 'JS', 'QS', 'KS'];
-    
-    // src/images/Diamonds/2.png
 
     const suits = ['Spades', 'Hearts', 'Diamonds', 'Clubs'];
     const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -66,6 +58,7 @@ function App() {
     setDeck({...freshDeck});
   };
 
+// Manages whose turn it is and whether game is over
   useEffect(() => {
     console.log('useEffect called',
     'playerTurn =', playerTurn,
@@ -86,7 +79,7 @@ function App() {
       evalHands();
     }}, [playerTurn, gameOver, dealerHand, dealerTurn]);
 
-  // Recalculate value of player's hand
+// Recalculate value of player's hand
   useEffect(() => {
     setPlayerHand(prev => ({...prev, value: 0 }));
     for (let i = 0; i < playerHand.cards.length; i++) {
@@ -104,7 +97,7 @@ function App() {
     };
   }, [playerHand.cards, playerHand.value]);
 
-  // Recalculate value of dealer's hand
+// Recalculate value of dealer's hand
   useEffect(() => {
     setDealerHand(prev => ({...prev, value: 0 }));
     for (let i = 0; i < dealerHand.cards.length; i++) {
@@ -126,12 +119,13 @@ function App() {
     };
   }, [dealerHand.cards, dealerHand.value]);
 
-
+// Changes the message shown to the player
   useEffect(() => {
     console.log('message', message);
   }, [message]);
 
-
+// Parses the card data into numerical values
+/* TODO: Determine how to handle Aces (Soft/Hard) */
   const evalCard = (card) => {
     switch (card.value) {
       case "K":
@@ -146,6 +140,7 @@ function App() {
     };
   };
 
+// Deal a card from the deck to the player
   const dealPlayer = (deck) => {
     let card = deck.shift();
     setPlayerHand(prev => ({cards: [...prev.cards, card]}));
@@ -153,7 +148,8 @@ function App() {
     setDeck(updatedDeck);
   };
 
-  const dealDealer = (deck, visible=true) => {
+// Deal a card from the deck to the dealer
+  const dealDealer = (deck) => {
     let card = deck.shift();
     setDealerHand(prev => ({cards: [...prev.cards, card]}));
     let updatedDeck = deck;
