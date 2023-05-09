@@ -217,8 +217,9 @@ function App() {
     };
 
   return (
+    
     <Container className="p-3">
-      <Container className="p-5 mb-4 bg-light rounded-3">
+      <Container className="p-5 mb-4 bg-secondary rounded-3">
         <h1 className="header">Dealer's Cards</h1>
           <div className="d-flex justify-content-center">
           {dealerHand.cards.map(function(e) { 
@@ -237,7 +238,7 @@ function App() {
       </Container>
 
 
-      <Container className="p-5 mb-4 bg-light rounded-3">
+      <Container className="p-5 mb-4 bg-secondary rounded-3">
         <h1 className="header">Your Cards</h1>
           <div className="d-flex justify-content-center">
           {playerHand.cards.map( e => (<td><Container className="card p-0"> 
@@ -251,7 +252,9 @@ function App() {
       <button type="button" className="btn btn-primary p-3 b-1"
         onClick={() => {newHand(newDeck())}}>Deal</button>
 
-      <div className="d-flex justify-content-center">{ message }</div>
+      <div className="d-flex justify-content-center">
+        <h3 className="header">{ message }</h3>
+      </div>
 
       <div className="d-flex justify-content-center">
         <div className="btn-group btn-group-lg p-3 b-1">
