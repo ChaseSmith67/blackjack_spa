@@ -1,15 +1,21 @@
-import React, { useState } from "react";
 
-const Deck = () => {
-const BASE_URL = "https://deckofcardsapi.com/api/deck/";
-
-async function newDeck() {
-    let url = BASE_URL + "new";
-    let res = await fetch(url);
-    let data = await res.json();
-    console.log(data);
+class Card {
+    constructor(value, suit, image, visible = true) {
+        this.value = value;
+        this.suit = suit;
+        this.image = image;
+        this.visible = visible;
+    }
 }
 
+const suits = ['Spades', 'Hearts', 'Diamonds', 'Clubs'];
+const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+let deck = [];
+
+for (let suit of suits) {
+    for (let value of values) {
+        deck.push(new Card(value, suit, "images/" + suit + "/" + value + ".png"));
+    }
 }
 
-export default Deck;
+export default deck;
