@@ -6,22 +6,9 @@ import deck from "./components/Deck";
 
 
 function App() {
-  const newDeck = () => {
-    
+  const newDeck = () => {    
 	let newDeck = deck;
-
-    // Fisher-Yates algorithm to shuffle the deck
-    const shuffleArray = (arr) => {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        const temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-      }
-      return arr;
-    };
-
-    return shuffleArray(newDeck);
+    return newDeck;
   };
 
 
@@ -51,7 +38,7 @@ function App() {
     } else if (!playerTurn && dealerTurn) {
       dealerHand.cards[0].visible = true;
     }
-  }, [dealerHand.cards, dealerTurn, gameOver, playerTurn]);
+  }, [gameOver, playerTurn]);
 
 //   useEffect(() => {
 // 	if (dealerTurn) {
