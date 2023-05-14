@@ -27,15 +27,18 @@ function App() {
 		}
 	}, [playerHand])
 
-	// useEffect(() => {
-	// 	if (dealerHand.cards.length === 2) { 
-	// 		if (phase === ("player" || null)) {
-	// 		dealerHand.cards[0].visible = false;
-	// 		} else {
-	// 		dealerHand.cards[0].visible = true;
-	// 		}
-	// 	}
-	// }, [dealerHand])
+	useEffect(() => {
+		if (dealerHand.cards.length === 2) { 
+			if (phase === ("dealer")) {
+				dealerHand.cards[0].visible = true;
+			} else {
+				if (dealerHand.cards[0].value === "A" && evalCard(dealerHand.cards[1]) === 10) {
+					setPhase("game over")
+					setMessage("Dealer Blackjack!");
+				} 
+			}
+		}
+	}, [dealerHand])
 
 	const newHand = () => {
 
@@ -93,7 +96,11 @@ function App() {
 	// Deal a card from the deck to the dealer
 	const dealDealer = (card, visible=true) => {
 		card.visible = visible;
-		setDealerHand((prev) => ({ ...prev, cards: [...prev.cards, card], value: prev.value + evalCard(card) }));
+		if (visible) {
+			setDealerHand((prev) => ({ ...prev, cards: [...prev.cards, card], value: prev.value + evalCard(card) }));
+		} else {
+			setDealerHand((prev) => ({ ...prev, cards: [...prev.cards, card] }));
+		}
 		setDeck(prev => ([...prev.slice(1)]));
 	};
 
@@ -132,7 +139,13 @@ function App() {
 	};
 
 	const endTurn = () => {
-		
+		if (phase === "player") {
+			setPhase("dealer");
+			setMessage("Dealer's turn!");
+			dealerHand.cards[0].visible = true;
+		} else {
+			window.alert("It's not your turn!");
+		}
 	};
 
 	return (
