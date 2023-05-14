@@ -34,6 +34,8 @@ function App() {
 					setTimeout(() => {
 						dealDealer(deck[0]);;
 					  }, 500);
+				} else {
+					setPhase("game over")
 				}
 			} else {
 				if (dealerHand.cards[0].value === "A" && evalCard(dealerHand.cards[1]) === 10) {
@@ -47,8 +49,9 @@ function App() {
 				setTimeout(() => {
 					dealDealer(deck[0]);;
 				  }, 500);
-				
-			}
+				} else {
+					setPhase("game over")
+				}
 		}
 	}, [dealerHand])
 
@@ -57,6 +60,21 @@ function App() {
 			let card = dealerHand.cards[0]
 			card.visible = true;
 			setDealerHand((prev) => ({ ...prev, value: prev.value + evalCard(card) }));
+		} else if (phase === "game over") {
+			if (dealerHand.value > 21 && playerHand.value <= 21) {
+				setMessage("Dealer Busted!");
+			} else if (dealerHand.value > playerHand.value) {
+				setMessage("Dealer Wins!")
+			
+			} else if (dealerHand.value < playerHand.value) {
+				if (playerHand.value > 21) {
+					setMessage("Player Busted!");
+				} else {
+				setMessage("Player Wins!");
+				}
+			} else {
+				setMessage("Push!");
+			}
 		}
 	}, [phase])
 
@@ -73,9 +91,15 @@ function App() {
 		console.log(deck)
 		
 		dealPlayer(deck[0]);
-		dealDealer(deck[1], false);
-		dealPlayer(deck[2]);
-		dealDealer(deck[3]);
+		// setTimeout(() => {
+			dealDealer(deck[1], false);
+		//   }, 500);
+		//   setTimeout(() => {
+			dealPlayer(deck[2]);
+		//   }, 1000);
+		//   setTimeout(() => {
+			dealDealer(deck[3]);
+		//   }, 1500);
 	
 		setMessage("Player's turn!");
 		// };
