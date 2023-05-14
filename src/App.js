@@ -1,295 +1,239 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Container from "react-bootstrap/Container"; 
-import deck from "./components/Deck";
+import { createDeck } from "./components/Deck";
 
 
 
 function App() {
-  const newDeck = () => {    
-	let newDeck = deck;
-    return newDeck;
-  };
 
+	const [deck, setDeck] = useState(createDeck());
+	const [phase, setPhase] = useState(null);	// Current phase of game: player turn, dealer turn, game over
+	const [playerHand, setPlayerHand] = useState({ cards: [], value: 0 });
+	const [dealerHand, setDealerHand] = useState({ cards: [], value: 0 });
+	const [message, setMessage] = useState("");
 
-  const [playerTurn, setPlayerTurn] = useState(null);
-  const [gameOver, setGameOver] = useState(null);
-  const [dealerTurn, setDealerTurn] = useState(null);
-  const [playerHand, setPlayerHand] = useState({ cards: [], value: 0 });
-  const [dealerHand, setDealerHand] = useState({ cards: [], value: 0 });
-  const [message, setMessage] = useState("");
+	useEffect(() => {
+		console.log("message", message)
+	},[message])
 
-  useEffect(() => {
-	setMessage(message);
-  }, [message])
-
-  useEffect(() => {
-    recalculatePlayerHand();
-	if (playerHand.value > 21) {
-		setMessage("Player Busts!");
-		setPlayerTurn(false);
-		setGameOver(true);
-	}
-  }, [playerHand]);
-
-  useEffect(() => {
-    if (playerTurn && !gameOver) {
-      dealerHand.cards[0].visible = false;
-    } else if (!playerTurn && dealerTurn) {
-      dealerHand.cards[0].visible = true;
-    }
-  }, [gameOver, playerTurn]);
-
-//   useEffect(() => {
-// 	if (dealerTurn) {
-
-// 	}
-//   }, [dealerTurn])
-
-  useEffect(() => {
-    setDealerHand(prev => ({...prev, value: recalculateDealerHand()}))
-    if (dealerTurn) {
-		setMessage("Dealer's Turn")
-      	dealDealer(deck);
-	}
-  }, [dealerHand]);
-
-
-  // Resets Hands and Deck
-  const clearTable = () => {
-    setPlayerHand((prev) => ({ ...prev, cards: [] }));
-    setDealerHand((prev) => ({ ...prev, cards: [] }));
-    // Create new deck
-    // let freshDeck = newDeck();
-    // setDeck({ ...freshDeck });
-  };
-
-  // Parses the card data into numerical values
-  /* TODO: Determine how to handle Aces (Soft/Hard) */
-  const evalCard = (card) => {
-    switch (card.value) {
-      case "K":
-      case "Q":
-      case "J":
-      case "1":
-        return 10;
-      case "A":
-        return 11;
-      default:
-        return parseInt(card.value);
-    }
-  };
-
-  // Deal a card from the deck to the player
-  const dealPlayer = (deck) => {
-    let card = deck.shift();
-    setPlayerHand((prev) => ({ cards: [...prev.cards, card] }));
-    // let updatedDeck = deck;
-    // setDeck(updatedDeck);
-  };
-
-  // Deal a card from the deck to the dealer
-  const dealDealer = (deck) => {
-	if (dealerHand.value < 17) {
-		let card = deck.shift();
-		if (playerTurn && dealerHand.length === 0) {
-			card.visible = false;
+	useEffect(() => {
+		if (playerHand.value === 21 && playerHand.cards.length === 2) {
+			setMessage("Blackjack!");
+			setPhase("dealer")
+		} else if (playerHand.value > 21) {
+			setMessage("Player Busted!");
+			setPhase("dealer")
 		}
-		setDealerHand((prev) => ({ cards: [...prev.cards, card] }));
-		// let updatedDeck = deck;
-		// setDeck(updatedDeck);
-  	} else {
-		evalHands();
-	}
-  };
+	}, [playerHand])
 
-  const recalculateDealerHand = () => {
-    setDealerHand((prev) => ({ ...prev, value: 0 }));
-    for (let i = 0; i < dealerHand.cards.length; i++) {
-      if (dealerHand.cards[i].visible) {
-        let cardVal = evalCard(dealerHand.cards[i]);
-        setDealerHand((prev) => ({ ...prev, value: prev.value + cardVal }));
-      }
-    }
-	return dealerHand.value;
-  };
+	// useEffect(() => {
+	// 	if (dealerHand.cards.length === 2) { 
+	// 		if (phase === ("player" || null)) {
+	// 		dealerHand.cards[0].visible = false;
+	// 		} else {
+	// 		dealerHand.cards[0].visible = true;
+	// 		}
+	// 	}
+	// }, [dealerHand])
 
-  const recalculatePlayerHand = () => {
-    setPlayerHand((prev) => ({ ...prev, value: 0 }));
-    for (let i = 0; i < playerHand.cards.length; i++) {
-      let cardVal = evalCard(playerHand.cards[i]);
-      setPlayerHand((prev) => ({ ...prev, value: prev.value + cardVal }));
-    }
-  };
+	const newHand = () => {
 
-  const playerHit = () => {
-    if (playerTurn) {
-      dealPlayer(deck);
-    } else {
-      window.alert("It's not your turn!");
-    }
-  };
+		setDeck(clearTable());
 
-  const newHand = (deck) => {
-    // Clear hands
-    clearTable();
-    setGameOver(false);
-	setPlayerTurn(true);
-    setDealerTurn(false);
+		console.log(phase)
+		setPhase("player")
+		console.log(phase)
+
+		// // Clear hands
+		// clearTable();
+		console.log(deck)
+		
+		dealPlayer(deck[0]);
+		dealDealer(deck[1], false);
+		dealPlayer(deck[2]);
+		dealDealer(deck[3]);
 	
+		setMessage("Player's turn!");
+		// };
+	  };
 
-    // Deal Cards
-    dealPlayer(deck);
-    console.log(deck);
-    dealDealer(deck);
-    console.log(deck);
-    dealPlayer(deck);
-    dealDealer(deck);
 
-    
-    setMessage("Player's turn!");
-    // };
-  };
+	// Resets Hands and Deck
+	function clearTable() {
+		setPlayerHand((prev) => ({ ...prev, cards: [], value: 0 }));
+		setDealerHand((prev) => ({ ...prev, cards: [], value: 0 }));
+		// LOGIC FOR NEW DECK
+		let newDeck = createDeck();
+		return newDeck;
+	};
 
-  const evalHands = () => {
-	setDealerTurn(false);
-    if (dealerHand.value > 21) {
-      setMessage("Dealer busts!");
-    } else if (playerHand.value > 21) {
-      setMessage("Player busts!");
-    } else {
-      if (
-        playerHand.value === 21 &&
-        playerHand.cards.length === 2 &&
-        dealerHand.value !== 21
-      ) {
-        setMessage("Blackjack!");
-      } else if (
-        playerHand.value !== 21 &&
-        dealerHand.value === 21 &&
-        dealerHand.cards.length === 2
-      ) {
-        setMessage("Dealer Blackjack!");
-      } else if (playerHand.value > dealerHand.value) {
-        setMessage("Player wins!");
-      } else if (playerHand.value < dealerHand.value) {
-        setMessage("Dealer wins!");
-      } else {
-        setMessage("Push!");
-      }
-    }
-    setGameOver(true);
-  };
+	// Parses the card data into numerical values
+	/* TODO: Determine how to handle Aces (Soft/Hard) */
+	const evalCard = (card) => {
+		switch (card.value) {
+		case "K":
+		case "Q":
+		case "J":
+		case "1":
+			return 10;
+		case "A":
+			return 11;
+		default:
+			return parseInt(card.value);
+		}
+	};
 
-  const endTurn = () => {
-    if (playerTurn) {
-      setDealerTurn(true);
-      setPlayerTurn(false);
-      setGameOver(false);
-    } else {
-      window.alert("It's not your turn!");
-    }
-  };
+	// Deal a card from the deck to the player
+	const dealPlayer = (card) => {
+		setPlayerHand((prev) => ({ ...prev, cards: [...prev.cards, card], value: prev.value + evalCard(card) }));
+		setDeck(prev => ([...prev.slice(1)]));
+	};
 
-  return (
-    <Container className="p-3">
-      <Container className="p-5 mb-4 bg-secondary rounded-3">
-        <h1 className="header">Dealer's Cards</h1>
-        <div className="d-flex justify-content-center">
-          {dealerHand.cards.map(function (e) {
-            if (e.visible) {
-              return (
-                <td>
-                  <Container className="card p-0">
-                    <img src={e.image} alt="" width="100" height="150" />
-                  </Container>
-                </td>
-              );
-            } else {
-              return (
-                <td>
-                  <Container className="card p-0">
-                    <img
-                      src="images/Back_Covers/Pomegranate.png"
-                      alt=""
-                      width="100"
-                      height="150"
-                    />
-                  </Container>
-                </td>
-              );
-            }
-          })}
-        </div>
-        <div className="d-flex justify-content-center">{dealerHand.value} </div>
-      </Container>
+	// Deal a card from the deck to the dealer
+	const dealDealer = (card, visible=true) => {
+		card.visible = visible;
+		setDealerHand((prev) => ({ ...prev, cards: [...prev.cards, card], value: prev.value + evalCard(card) }));
+		setDeck(prev => ([...prev.slice(1)]));
+	};
 
-      <Container className="p-5 mb-4 bg-secondary rounded-3">
-        <h1 className="header">Your Cards</h1>
-        <div className="d-flex justify-content-center">
-          {playerHand.cards.map((e) => (
-            <td>
-              <Container className="card p-0">
-                <img src={e.image} alt="" width="100" height="150" />
-              </Container>
-            </td>
-          ))}
-        </div>
-        <div className="d-flex justify-content-center">{playerHand.value}</div>
-      </Container>
+	const recalculateDealerHand = () => {
+		setDealerHand((prev) => ({ ...prev, value: 0 }));
+		for (let i = 0; i < dealerHand.cards.length; i++) {
+		if (dealerHand.cards[i].visible) {
+			let cardVal = evalCard(dealerHand.cards[i]);
+			setDealerHand((prev) => ({ ...prev, value: prev.value + cardVal }));
+		}
+		}
+		return dealerHand.value;
+	};
 
-      <button
-        type="button"
-        className="btn btn-primary p-3 b-1"
-        onClick={() => {
-          newHand(newDeck());
-        }}
-      >
-        Deal
-      </button>
+	const recalculatePlayerHand = () => {
+		setPlayerHand((prev) => ({ ...prev, value: 0 }));
+		for (let i = 0; i < playerHand.cards.length; i++) {
+		let cardVal = evalCard(playerHand.cards[i]);
+		setPlayerHand((prev) => ({ ...prev, value: prev.value + cardVal }));
+		}
+	};
 
-      <div className="d-flex justify-content-center">
-        <h3 className="header">{message}</h3>
-      </div>
+	const playerHit = () => {
+		if (phase === "player") {
+			dealPlayer(deck[0]);
+		} else {
+			window.alert("It's not your turn!");
+		}
+	};
 
-      <div className="d-flex justify-content-center">
-        <div className="btn-group btn-group-lg p-3 b-1">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => {
-              playerHit();
+  
+
+	const evalHands = () => {
+
+		
+	};
+
+	const endTurn = () => {
+		
+	};
+
+	return (
+		<Container className="p-3">
+		<Container className="p-5 mb-4 bg-secondary rounded-3">
+			<h1 className="header">Dealer's Cards</h1>
+			<div className="d-flex justify-content-center">
+			{dealerHand.cards.map(function (e) {
+				if (e.visible) {
+				return (
+					<td>
+					<Container className="card p-0">
+						<img src={e.image} alt="" width="100" height="150" />
+					</Container>
+					</td>
+				);
+				} else {
+				return (
+					<td>
+					<Container className="card p-0">
+						<img
+						src="images/Back_Covers/Pomegranate.png"
+						alt=""
+						width="100"
+						height="150"
+						/>
+					</Container>
+					</td>
+				);
+				}
+			})}
+			</div>
+			<div className="d-flex justify-content-center">{dealerHand.value} </div>
+		</Container>
+
+		<Container className="p-5 mb-4 bg-secondary rounded-3">
+			<h1 className="header">Your Cards</h1>
+			<div className="d-flex justify-content-center">
+			{playerHand.cards.map((e) => (
+				<td>
+				<Container className="card p-0">
+					<img src={e.image} alt="" width="100" height="150" />
+				</Container>
+				</td>
+			))}
+			</div>
+			<div className="d-flex justify-content-center">{playerHand.value}</div>
+		</Container>
+
+		<button
+			type="button"
+			className="btn btn-primary p-3 b-1"
+			onClick={() => {
+			newHand();
+			}}
+		>
+			Deal
+		</button>
+
+		<div className="d-flex justify-content-center">
+			<h3 className="header">{message}</h3>
+		</div>
+
+		<div className="d-flex justify-content-center">
+			<div className="btn-group btn-group-lg p-3 b-1">
+			<button
+				type="button"
+				className="btn btn-primary"
+				onClick={() => {
+				playerHit();
+				}}
+			>
+				Hit
+			</button>
+			<button
+				type="button"
+				className="btn btn-primary"
+				onClick={() => {
+				endTurn();
             }}
-          >
-            Hit
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => {
-              endTurn();
-            }}
-          >
-            Stand
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => console.log("double")}
-          >
-            Double
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => console.log("split")}
-          >
-            Split
-          </button>
-        </div>
-      </div>
-    </Container>
-  );
-}
+			>
+				Stand
+			</button>
+			<button
+				type="button"
+				className="btn btn-primary"
+				onClick={() => console.log("double")}
+			>
+				Double
+			</button>
+			<button
+				type="button"
+				className="btn btn-primary"
+				onClick={() => console.log("split")}
+				>
+				Split
+			</button>
+			</div>
+		</div>
+		</Container>
+	);
+	}
 
 export default App;
