@@ -29,6 +29,5 @@ const shuffleArray = (arr) => {
     return arr;
   };
 
-deck = shuffleArray(deck);
+export function createDeck() {return shuffleArray(deck);}
 
-export default deck;
