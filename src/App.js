@@ -20,10 +20,19 @@ function App() {
 	useEffect(() => {
 		if (playerHand.value === 21 && playerHand.cards.length === 2) {
 			setMessage("Blackjack!");
-			setPhase("dealer")
+			setPhase("game over");
 		} else if (playerHand.value > 21) {
-			setMessage("Player Busted!");
-			setPhase("dealer")
+			for (let i = 0; i < playerHand.cards.length; i++) {
+				let card = playerHand.cards[i];
+				if (card.value === "A") {
+					card.value = "S";
+					setPlayerHand((prev) => ({ ...prev, value: prev.value + evalCard(card) - 11 }));
+					break;
+				} else {
+					setMessage("Player Busted!");
+					setPhase("dealer");
+					}
+				}
 		}
 	}, [playerHand])
 
@@ -39,9 +48,9 @@ function App() {
 				}
 			} else {
 				if (dealerHand.cards[0].value === "A" && evalCard(dealerHand.cards[1]) === 10) {
-					setPhase("game over")
 					dealerHand.cards[0].visible = true;
 					setMessage("Dealer Blackjack!");
+					setPhase("game over")
 				} 
 			}
 		} else if (phase === ("dealer")) {
@@ -122,8 +131,9 @@ function App() {
 		case "K":
 		case "Q":
 		case "J":
-		case "1":
 			return 10;
+		case "S":
+			return 1;
 		case "A":
 			return 11;
 		default:
@@ -133,12 +143,18 @@ function App() {
 
 	// Deal a card from the deck to the player
 	const dealPlayer = (card) => {
+		if (card.value === "S") {
+			card.value = "A";
+		}
 		setPlayerHand((prev) => ({ ...prev, cards: [...prev.cards, card], value: prev.value + evalCard(card) }));
 		setDeck(prev => ([...prev.slice(1)]));
 	};
 
 	// Deal a card from the deck to the dealer
 	const dealDealer = (card, visible=true) => {
+		if (card.value === "S") {
+			card.value = "A";
+		}
 		card.visible = visible;
 		if (visible) {
 			setDealerHand((prev) => ({ ...prev, cards: [...prev.cards, card], value: prev.value + evalCard(card) }));
@@ -175,12 +191,6 @@ function App() {
 		}
 	};
 
-  
-
-	const evalHands = () => {
-
-		
-	};
 
 	const endTurn = () => {
 		if (phase === "player") {
