@@ -41,15 +41,7 @@ function App() {
 
   useEffect(() => {
     if (dealerHand.cards.length === 2) {
-      if (phase === "dealer") {
-        if (dealerHand.value < 17) {
-          setTimeout(() => {
-            dealDealer(deck[0]);
-          }, 500);
-        } else {
-          setPhase("game over");
-        }
-      } else {
+      if (phase !== "dealer") {
         if (
           dealerHand.cards[0].value === "A" &&
           evalCard(dealerHand.cards[1]) === 10
@@ -59,15 +51,34 @@ function App() {
           setPhase("game over");
         }
       }
-    } else if (phase === "dealer") {
-      if (dealerHand.value < 17) {
-        setTimeout(() => {
-          dealDealer(deck[0]);
-        }, 500);
-      } else {
-        setPhase("game over");
-      }
     }
+	 if (phase === "dealer") {
+      if (dealerHand.value < 17) {
+		let hasAce = false;
+      for (let i = 0; i < dealerHand.cards.length; i++) {
+        let card = dealerHand.cards[i];
+        if (card.value === "A") {
+			hasAce = true;
+          card.value = "S";
+          setDealerHand((prev) => ({
+            ...prev,
+            value: prev.value + evalCard(card) - 11,
+          }));
+          break;
+        } 
+      }
+
+	  if (!hasAce && dealerHand.value >= 17) {
+		setPhase("game over");
+	  } else if (dealerHand.value < 17) {
+		setTimeout(() => {
+			dealDealer(deck[0]);
+		  }, 500);
+    }
+} else {
+	setPhase("game over");
+}
+}
   }, [dealerHand]);
 
   useEffect(() => {
