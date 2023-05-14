@@ -30,15 +30,35 @@ function App() {
 	useEffect(() => {
 		if (dealerHand.cards.length === 2) { 
 			if (phase === ("dealer")) {
-				dealerHand.cards[0].visible = true;
+				if (dealerHand.value < 17) {
+					setTimeout(() => {
+						dealDealer(deck[0]);;
+					  }, 500);
+				}
 			} else {
 				if (dealerHand.cards[0].value === "A" && evalCard(dealerHand.cards[1]) === 10) {
 					setPhase("game over")
+					dealerHand.cards[0].visible = true;
 					setMessage("Dealer Blackjack!");
 				} 
 			}
+		} else if (phase === ("dealer")) {
+			if (dealerHand.value < 17) {
+				setTimeout(() => {
+					dealDealer(deck[0]);;
+				  }, 500);
+				
+			}
 		}
 	}, [dealerHand])
+
+	useEffect(() => {
+		if (phase === "dealer") {
+			let card = dealerHand.cards[0]
+			card.visible = true;
+			setDealerHand((prev) => ({ ...prev, value: prev.value + evalCard(card) }));
+		}
+	}, [phase])
 
 	const newHand = () => {
 
