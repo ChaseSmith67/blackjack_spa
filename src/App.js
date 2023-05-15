@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import Container from "react-bootstrap/Container";
 import { createDeck } from "./components/Deck";
+import { Row, Col, Toast, Button } from "react-bootstrap";
 
 function App() {
   const [deck, setDeck] = useState(createDeck());
@@ -9,6 +10,9 @@ function App() {
   const [playerHand, setPlayerHand] = useState({ cards: [], value: 0 });
   const [dealerHand, setDealerHand] = useState({ cards: [], value: 0 });
   const [message, setMessage] = useState("");
+  const [showHint, setShowHint] = useState(false);
+
+  const toggleShowHint = () => {setShowHint(!showHint);}
 
   useEffect(() => {
     console.log("message", message);
@@ -273,6 +277,26 @@ function App() {
         <div className="d-flex justify-content-center">{playerHand.value}</div>
       </Container>
 
+      <div className="d-flex justify-content-center">
+      <Col md={6} className="mb-2">
+        <Button onClick={toggleShowHint} className="mb-2">
+          Show Hint
+        </Button>
+        <Toast show={showHint} onClose={toggleShowHint}>
+          <Toast.Header>
+            <img
+              src="holder.js/20x20?text=%20"
+              className="rounded me-2"
+              alt=""
+            />
+            <strong className="me-auto">For the best chance of winning:</strong>
+            {/* <small>11 mins ago</small> */}
+          </Toast.Header>
+          <Toast.Body>This is where the hint message goes...</Toast.Body>
+        </Toast>
+      </Col>
+      </div>
+      
       <button
         type="button"
         className="btn btn-primary p-3 b-1"
