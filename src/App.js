@@ -11,6 +11,8 @@ function App() {
   const [dealerHand, setDealerHand] = useState({ cards: [], value: 0 });
   const [message, setMessage] = useState("");
   const [showHint, setShowHint] = useState(false);
+  const [hint, setHint] = useState("Place a bet and press 'Deal'.");
+  const [bet, setBet] = useState(0);
 
   const toggleShowHint = () => {setShowHint(!showHint);}
 
@@ -220,6 +222,15 @@ function App() {
     }
   };
 
+  const doubleDown = () => {
+    if (phase === "player") {
+      dealPlayer(deck[0]);
+      setPhase("dealer");
+    } else {
+      window.alert("It's not your turn!");
+    }
+  };
+
   const endTurn = () => {
     if (phase === "player") {
       setPhase("dealer");
@@ -339,7 +350,7 @@ function App() {
           <button
             type="button"
             className="btn btn-primary"
-            onClick={() => console.log("double")}
+            onClick={() => doubleDown()}
           >
             Double
           </button>
