@@ -231,10 +231,11 @@ function App() {
   };
 
   return (
-    <Container className="p-3">
-      <Container className="p-5 mb-4 bg-secondary rounded-3">
+    <Container className="p-1">
+      <Container className="p-3 mb-4 bg-secondary rounded-3">
         <h1 className="header">Dealer's Cards</h1>
         <div className="d-flex justify-content-center">
+        <td><img src="images/Empty.png" alt="" width="100" height="150" /></td>
           {dealerHand.cards.map(function (e) {
             if (e.visible) {
               return (
@@ -259,13 +260,15 @@ function App() {
               );
             }
           })}
+          <td><img src="images/Empty.png" alt="" width="100" height="150" /></td>
         </div>
         <div className="d-flex justify-content-center">{dealerHand.value} </div>
       </Container>
 
-      <Container className="p-5 mb-4 bg-secondary rounded-3">
+      <Container className="p-3 mb-4 bg-secondary rounded-3">
         <h1 className="header">Your Cards</h1>
         <div className="d-flex justify-content-center">
+          <td><img src="images/Empty.png" alt="" width="100" height="150" /></td>
           {playerHand.cards.map((e) => (
             <td>
               <Container className="card p-0">
@@ -273,6 +276,7 @@ function App() {
               </Container>
             </td>
           ))}
+          <td><img src="images/Empty.png" alt="" width="100" height="150" /></td>
         </div>
         <div className="d-flex justify-content-center">{playerHand.value}</div>
       </Container>
