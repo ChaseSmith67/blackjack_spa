@@ -3,6 +3,7 @@ import "./App.css";
 import Container from "react-bootstrap/Container";
 import { createDeck } from "./components/Deck";
 import { Row, Col, Toast, Button } from "react-bootstrap";
+import getBlackJackStats from "./components/StatsService";
 
 function App() {
   const [deck, setDeck] = useState(createDeck());
@@ -14,7 +15,12 @@ function App() {
   const [hint, setHint] = useState("Place a bet and press 'Deal'.");
   const [bet, setBet] = useState(0);
 
+
   const toggleShowHint = () => {setShowHint(!showHint);}
+
+  let data = getBlackJackStats();
+  console.log(data)
+
 
   useEffect(() => {
     console.log("message", message);
@@ -305,7 +311,7 @@ function App() {
               alt=""
             />
             <strong className="me-auto">For the best chance of winning:</strong>
-            {/* <small>11 mins ago</small> */}
+            {/* { "wins: ", stats. } */}
           </Toast.Header>
           <Toast.Body>This is where the hint message goes...</Toast.Body>
         </Toast>
