@@ -15,12 +15,19 @@ function App() {
   const [hint, setHint] = useState("Place a bet and press 'Deal'.");
   const [bet, setBet] = useState(0);
 
+  const [stats, setStats] = useState([]);
+
 
   const toggleShowHint = () => {setShowHint(!showHint);}
 
-  let data = getBlackJackStats();
-  console.log(data)
+  
+  
+  
 
+
+  useEffect(() => {
+    getBlackJackStats().then((stats) => setStats(stats)); //
+  }, []);
 
   useEffect(() => {
     console.log("message", message);
@@ -248,7 +255,13 @@ function App() {
   };
 
   return (
+    
     <Container className="p-1">
+      {stats.map((e) => (
+            <td>
+              <p>{e.title} {e.count}</p>
+            </td>
+          ))}
       <Container className="p-3 mb-4 bg-secondary rounded-3">
         <h1 className="header">Dealer's Cards</h1>
         <div className="d-flex justify-content-center">
