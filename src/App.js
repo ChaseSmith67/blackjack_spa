@@ -6,29 +6,50 @@ import { Row, Col, Toast, Button } from "react-bootstrap";
 import getBlackJackStats from "./components/StatsService";
 
 function App() {
+  // Deck of cards used to play the game.
   const [deck, setDeck] = useState(createDeck());
-  const [phase, setPhase] = useState(null); // Current phase of game: player turn, dealer turn, game over
+
+  // Current phase of game: player turn, dealer turn, game over
+  const [phase, setPhase] = useState(null);
+
+  /**
+   * Player and dealer's hands, with an array to hold the card objects
+   *  and a dynamically calculated value that is the sum of the cards in the hand.
+   */
   const [playerHand, setPlayerHand] = useState({ cards: [], value: 0 });
   const [dealerHand, setDealerHand] = useState({ cards: [], value: 0 });
+
+  // Message diplayed, indicating whose turn it is or who won the game.
   const [message, setMessage] = useState("Place a bet and press 'Deal'.");
-  const [showHint, setShowHint] = useState(false);
+
+  // Hint shown to player, letting them know the action most likely to win.
   const [hint, setHint] = useState("Place a bet and press 'Deal'.");
+
+  // Hides or displays the hint.
+  const [showHint, setShowHint] = useState(false);
+
+  // Used to manage the player's bet.
   const [bet, setBet] = useState(0);
 
+  // Sets the historical win statistics
   const [stats, setStats] = useState([]);
 
   const toggleShowHint = () => {
-    setShowHint(!showHint);
+    setShowHint(!showHint); // Show or hide the hint.
   };
 
   useEffect(() => {
-    getBlackJackStats().then((stats) => setStats(stats)); //
+    getBlackJackStats().then((stats) => setStats(stats)); // Retrieve the stats
   }, []);
 
-  useEffect(() => {
-    console.log("message", message);
-  }, [message]);
+  // useEffect(() => {
+  //   console.log("message", message);
+  // }, [message]);
 
+  /**
+   *  Determine what the best possible action the player can take and
+   *  populate the toggleable hint box with the suggested action.
+   */
   useEffect(() => {
     let hasSoftAce = false;
     for (let i = 0; i < playerHand.cards.length; i++) {
@@ -165,6 +186,9 @@ function App() {
     }
   }, [playerHand.value]);
 
+  /**
+   *  Handle soft/hard aces, blackjack, and bust for player.
+   */
   useEffect(() => {
     if (playerHand.value === 21 && playerHand.cards.length === 2) {
       setMessage("Blackjack!");
@@ -175,7 +199,7 @@ function App() {
         let card = playerHand.cards[i];
         if (card.value === "A") {
           hasAce = true;
-          card.value = "S";
+          card.value = "H";
           setPlayerHand((prev) => ({
             ...prev,
             value: prev.value + evalCard(card) - 11,
@@ -190,6 +214,9 @@ function App() {
     }
   }, [playerHand]);
 
+  /**
+   *  Dealer's turn - determine whether dealer should hit or not
+   */
   useEffect(() => {
     if (dealerHand.cards.length === 2) {
       if (phase !== "dealer") {
@@ -211,7 +238,7 @@ function App() {
           let card = dealerHand.cards[i];
           if (card.value === "A") {
             hasAce = true;
-            card.value = "S";
+            card.value = "H";
             setDealerHand((prev) => ({
               ...prev,
               value: prev.value + evalCard(card) - 11,
@@ -233,6 +260,9 @@ function App() {
     }
   }, [dealerHand]);
 
+  /**
+   *  Manage phases of the game and determine who won.
+   */
   useEffect(() => {
     if (phase === "dealer") {
       let card = dealerHand.cards[0];
@@ -262,13 +292,11 @@ function App() {
   const newHand = () => {
     setDeck(clearTable());
 
-    // console.log(phase);
     setPhase("player");
-    // console.log(phase);
 
-    // console.log(deck);
+    // Deal first 4 cards
     dealPlayer(deck[0]);
-    dealDealer(deck[1], false);
+    dealDealer(deck[1], false); // Face-down card for dealer
     dealPlayer(deck[2]);
     dealDealer(deck[3]);
     setMessage("Player's turn!");
@@ -284,14 +312,13 @@ function App() {
   }
 
   // Parses the card data into numerical values
-  /* TODO: Determine how to handle Aces (Soft/Hard) */
   const evalCard = (card) => {
     switch (card.value) {
       case "K":
       case "Q":
       case "J":
         return 10;
-      case "S":
+      case "H": // Hard Ace
         return 1;
       case "A":
         return 11;
@@ -302,7 +329,7 @@ function App() {
 
   // Deal a card from the deck to the player
   const dealPlayer = (card) => {
-    if (card.value === "S") {
+    if (card.value === "H") {
       card.value = "A";
     }
     setPlayerHand((prev) => ({
@@ -315,7 +342,7 @@ function App() {
 
   // Deal a card from the deck to the dealer
   const dealDealer = (card, visible = true) => {
-    if (card.value === "S") {
+    if (card.value === "H") {
       card.value = "A";
     }
     card.visible = visible;
@@ -331,6 +358,7 @@ function App() {
     setDeck((prev) => [...prev.slice(1)]);
   };
 
+  // Only allow player to hit on their turn
   const playerHit = () => {
     if (phase === "player") {
       dealPlayer(deck[0]);
@@ -339,6 +367,7 @@ function App() {
     }
   };
 
+  // End turn after player doubles
   const doubleDown = () => {
     if (phase === "player") {
       dealPlayer(deck[0]);
@@ -348,6 +377,7 @@ function App() {
     }
   };
 
+  // Ends the player's turn, reveals Dealer's card
   const endTurn = () => {
     if (phase === "player") {
       setPhase("dealer");
@@ -439,7 +469,6 @@ function App() {
               <strong className="me-auto">
                 For the best chance of winning:
               </strong>
-              {/* { "wins: ", stats. } */}
             </Toast.Header>
             <Toast.Body> {hint} </Toast.Body>
           </Toast>
