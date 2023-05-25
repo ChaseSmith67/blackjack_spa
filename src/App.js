@@ -10,7 +10,7 @@ function App() {
   const [phase, setPhase] = useState(null); // Current phase of game: player turn, dealer turn, game over
   const [playerHand, setPlayerHand] = useState({ cards: [], value: 0 });
   const [dealerHand, setDealerHand] = useState({ cards: [], value: 0 });
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("Place a bet and press 'Deal'.");
   const [showHint, setShowHint] = useState(false);
   const [hint, setHint] = useState("Place a bet and press 'Deal'.");
   const [bet, setBet] = useState(0);
@@ -32,120 +32,135 @@ function App() {
   useEffect(() => {
     let hasSoftAce = false;
     for (let i = 0; i < playerHand.cards.length; i++) {
-        if (playerHand.cards[i].value === 'A') {
-          hasSoftAce = true;
-        }
-    if (phase === 'player') {
-      switch (playerHand.value) {
-        case 21:
-          if (playerHand.cards.length === 2) {
-            setHint("You have Blackjack!");
-          } else {
-            setHint("You should stand.")
-          }
-          break;
-        case 20:
-          setHint("You should stand.");
-          break;
-        case 19:
-          if (playerHand.cards.length === 2 && hasSoftAce && dealerHand.value === 6) {
-            setHint("You should double.");
-          } else {
+      if (playerHand.cards[i].value === "A") {
+        hasSoftAce = true;
+      }
+      if (phase === "player") {
+        switch (playerHand.value) {
+          case 21:
+            if (playerHand.cards.length === 2) {
+              setHint("You have Blackjack!");
+            } else {
+              setHint("You should stand.");
+            }
+            break;
+          case 20:
             setHint("You should stand.");
-          }
-          break;
-        case 18:
-          if (hasSoftAce) {
-            if (playerHand.cards.length === 2 && dealerHand.value <= 6) {
+            break;
+          case 19:
+            if (
+              playerHand.cards.length === 2 &&
+              hasSoftAce &&
+              dealerHand.value === 6
+            ) {
               setHint("You should double.");
-            } else if (dealerHand.value > 8) {
+            } else {
+              setHint("You should stand.");
+            }
+            break;
+          case 18:
+            if (hasSoftAce) {
+              if (playerHand.cards.length === 2 && dealerHand.value <= 6) {
+                setHint("You should double.");
+              } else if (dealerHand.value > 8) {
+                setHint("You should hit.");
+              } else {
+                setHint("You should stand.");
+              }
+            } else {
+              setHint("You should stand.");
+            }
+            break;
+          case 17:
+            if (hasSoftAce) {
+              if (dealerHand.value === 2 || dealerHand.value > 6) {
+                setHint("You should hit.");
+              } else {
+                setHint("You should double.");
+              }
+            } else {
+              setHint("You should stand.");
+            }
+            break;
+          case 16:
+          case 15:
+            if (hasSoftAce) {
+              if (
+                playerHand.cards.length === 2 &&
+                dealerHand.value > 3 &&
+                dealerHand.value < 7
+              ) {
+                setHint("You should double.");
+              } else {
+                setHint("You should hit.");
+              }
+            } else if (dealerHand.value > 6) {
               setHint("You should hit.");
             } else {
               setHint("You should stand.");
             }
-          } else {
-            setHint("You should stand.");
-          }
-          break;
-        case 17:
-          if (hasSoftAce) {
-            if (dealerHand.value === 2 || dealerHand.value > 6) {
+            break;
+          case 14:
+          case 13:
+            if (hasSoftAce) {
+              if (
+                playerHand.cards.length === 2 &&
+                dealerHand.value > 4 &&
+                dealerHand.value < 7
+              ) {
+                setHint("You should double.");
+              } else {
+                setHint("You should hit.");
+              }
+            } else if (dealerHand.value > 6) {
               setHint("You should hit.");
             } else {
-              setHint("You should double.");
+              setHint("You should stand.");
             }
-          } else {
-            setHint("You should stand.");
-          }
-          break;
-        case 16:
-        case 15:
-          if (hasSoftAce) {
-            if (playerHand.cards.length === 2 && (dealerHand.value > 3 && dealerHand.value < 7)) {
-              setHint("You should double.");
+            break;
+          case 12:
+            if (dealerHand.value > 3 && dealerHand.value < 7) {
+              setHint("You should stand.");
             } else {
               setHint("You should hit.");
             }
-          } else if (dealerHand.value < 7) {
-            setHint("You should hit.");
-          } else {
-            setHint("You should stand.");
-          }
-          break;
-        case 14:
-        case 13:
-          if (hasSoftAce) {
-            if (playerHand.cards.length === 2 && (dealerHand.value > 4 && dealerHand.value < 7)) {
+            break;
+          case 11:
+            if (playerHand.cards.length === 2) {
               setHint("You should double.");
             } else {
               setHint("You should hit.");
             }
-          } else if (dealerHand.value < 7) {
+            break;
+          case 10:
+            if (playerHand.cards.length === 2 && dealerHand.value < 10) {
+              setHint("You should double.");
+            } else {
+              setHint("You should hit.");
+            }
+            break;
+          case 9:
+            if (
+              playerHand.cards.length === 2 &&
+              dealerHand.value < 7 &&
+              dealerHand.value > 2
+            ) {
+              setHint("You should double.");
+            } else {
+              setHint("You should hit.");
+            }
+            break;
+          case 8:
+          case 7:
+          case 6:
+          case 5:
+          case 4:
             setHint("You should hit.");
-          } else {
-            setHint("You should stand.");
-          }
-          break;
-        case 12:
-          if (dealerHand.value > 3 && dealerHand.value < 7) {
-            setHint("You should stand.");
-          } else {
-            setHint("You should hit.");
-          }
-          break;
-        case 11:
-          if (playerHand.cards.length === 2) {
-            setHint("You should double.");
-          } else {
-            setHint("You should hit.");
-          }
-          break;
-        case 10:
-          if (playerHand.cards.length === 2 && dealerHand.value < 10) {
-            setHint("You should double.");
-          } else {
-            setHint("You should hit.");
-          }
-          break;
-        case 9:
-          if (playerHand.cards.length === 2 && dealerHand.value < 7 && dealerHand.value > 2) {
-            setHint("You should double.");
-          } else {
-            setHint("You should hit.");
-          }
-          break;
-        case 8:
-        case 7:
-        case 6:
-        case 5:
-        case 4:
-          setHint("You should hit.");
-          break;
-        default:
-          setHint("Oh No!")
-          break;
+            break;
+          default:
+            setHint("Oh No!");
+            break;
         }
-          
       }
     }
   }, [playerHand.value]);
@@ -186,6 +201,7 @@ function App() {
           setMessage("Dealer Blackjack!");
           setPhase("game over");
         }
+        // This is where Insurance would go. Not sure about that yet.
       }
     }
     if (phase === "dealer") {
@@ -226,7 +242,7 @@ function App() {
         value: prev.value + evalCard(card),
       }));
     } else if (phase === "game over") {
-      setHint("Place a bet and press 'Deal'.")
+      setHint("Place a bet and press 'Deal'.");
       if (dealerHand.value > 21 && playerHand.value <= 21) {
         setMessage("Dealer Busted!");
       } else if (dealerHand.value > playerHand.value) {
@@ -425,7 +441,7 @@ function App() {
               </strong>
               {/* { "wins: ", stats. } */}
             </Toast.Header>
-            <Toast.Body> { hint } </Toast.Body>
+            <Toast.Body> {hint} </Toast.Body>
           </Toast>
         </Col>
       </div>
