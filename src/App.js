@@ -17,13 +17,9 @@ function App() {
 
   const [stats, setStats] = useState([]);
 
-
-  const toggleShowHint = () => {setShowHint(!showHint);}
-
-  
-  
-  
-
+  const toggleShowHint = () => {
+    setShowHint(!showHint);
+  };
 
   useEffect(() => {
     getBlackJackStats().then((stats) => setStats(stats)); //
@@ -38,23 +34,23 @@ function App() {
       setMessage("Blackjack!");
       setPhase("game over");
     } else if (playerHand.value > 21) {
-		let hasAce = false;
+      let hasAce = false;
       for (let i = 0; i < playerHand.cards.length; i++) {
         let card = playerHand.cards[i];
         if (card.value === "A") {
-			hasAce = true;
+          hasAce = true;
           card.value = "S";
           setPlayerHand((prev) => ({
             ...prev,
             value: prev.value + evalCard(card) - 11,
           }));
           break;
-        } 
+        }
       }
-	  if (!hasAce) {
-		setMessage("Player Busted!")
-		setPhase("game over")
-	  }
+      if (!hasAce) {
+        setMessage("Player Busted!");
+        setPhase("game over");
+      }
     }
   }, [playerHand]);
 
@@ -71,33 +67,33 @@ function App() {
         }
       }
     }
-	 if (phase === "dealer") {
+    if (phase === "dealer") {
       if (dealerHand.value < 17) {
-		let hasAce = false;
-      for (let i = 0; i < dealerHand.cards.length; i++) {
-        let card = dealerHand.cards[i];
-        if (card.value === "A") {
-			hasAce = true;
-          card.value = "S";
-          setDealerHand((prev) => ({
-            ...prev,
-            value: prev.value + evalCard(card) - 11,
-          }));
-          break;
-        } 
-      }
+        let hasAce = false;
+        for (let i = 0; i < dealerHand.cards.length; i++) {
+          let card = dealerHand.cards[i];
+          if (card.value === "A") {
+            hasAce = true;
+            card.value = "S";
+            setDealerHand((prev) => ({
+              ...prev,
+              value: prev.value + evalCard(card) - 11,
+            }));
+            break;
+          }
+        }
 
-	  if (!hasAce && dealerHand.value >= 17) {
-		setPhase("game over");
-	  } else if (dealerHand.value < 17) {
-		setTimeout(() => {
-			dealDealer(deck[0]);
-		  }, 500);
+        if (!hasAce && dealerHand.value >= 17) {
+          setPhase("game over");
+        } else if (dealerHand.value < 17) {
+          setTimeout(() => {
+            dealDealer(deck[0]);
+          }, 500);
+        }
+      } else {
+        setPhase("game over");
+      }
     }
-} else {
-	setPhase("game over");
-}
-}
   }, [dealerHand]);
 
   useEffect(() => {
@@ -208,25 +204,6 @@ function App() {
     setDeck((prev) => [...prev.slice(1)]);
   };
 
-  const recalculateDealerHand = () => {
-    setDealerHand((prev) => ({ ...prev, value: 0 }));
-    for (let i = 0; i < dealerHand.cards.length; i++) {
-      if (dealerHand.cards[i].visible) {
-        let cardVal = evalCard(dealerHand.cards[i]);
-        setDealerHand((prev) => ({ ...prev, value: prev.value + cardVal }));
-      }
-    }
-    return dealerHand.value;
-  };
-
-  const recalculatePlayerHand = () => {
-    setPlayerHand((prev) => ({ ...prev, value: 0 }));
-    for (let i = 0; i < playerHand.cards.length; i++) {
-      let cardVal = evalCard(playerHand.cards[i]);
-      setPlayerHand((prev) => ({ ...prev, value: prev.value + cardVal }));
-    }
-  };
-
   const playerHit = () => {
     if (phase === "player") {
       dealPlayer(deck[0]);
@@ -255,17 +232,20 @@ function App() {
   };
 
   return (
-    
     <Container className="p-1">
       {stats.map((e) => (
-            <td>
-              <p>{e.title} {e.count}</p>
-            </td>
-          ))}
+        <td>
+          <p>
+            {e.title} {e.count}
+          </p>
+        </td>
+      ))}
       <Container className="p-3 mb-4 bg-secondary rounded-3">
         <h1 className="header">Dealer's Cards</h1>
         <div className="d-flex justify-content-center">
-        <td><img src="images/Empty.png" alt="" width="100" height="150" /></td>
+          <td>
+            <img src="images/Empty.png" alt="" width="100" height="150" />
+          </td>
           {dealerHand.cards.map(function (e) {
             if (e.visible) {
               return (
@@ -290,7 +270,9 @@ function App() {
               );
             }
           })}
-          <td><img src="images/Empty.png" alt="" width="100" height="150" /></td>
+          <td>
+            <img src="images/Empty.png" alt="" width="100" height="150" />
+          </td>
         </div>
         <div className="d-flex justify-content-center">{dealerHand.value} </div>
       </Container>
@@ -298,7 +280,9 @@ function App() {
       <Container className="p-3 mb-4 bg-secondary rounded-3">
         <h1 className="header">Your Cards</h1>
         <div className="d-flex justify-content-center">
-          <td><img src="images/Empty.png" alt="" width="100" height="150" /></td>
+          <td>
+            <img src="images/Empty.png" alt="" width="100" height="150" />
+          </td>
           {playerHand.cards.map((e) => (
             <td>
               <Container className="card p-0">
@@ -306,31 +290,35 @@ function App() {
               </Container>
             </td>
           ))}
-          <td><img src="images/Empty.png" alt="" width="100" height="150" /></td>
+          <td>
+            <img src="images/Empty.png" alt="" width="100" height="150" />
+          </td>
         </div>
         <div className="d-flex justify-content-center">{playerHand.value}</div>
       </Container>
 
       <div className="d-flex justify-content-center">
-      <Col md={6} className="mb-2">
-        <Button onClick={toggleShowHint} className="mb-2">
-          Show Hint
-        </Button>
-        <Toast show={showHint} onClose={toggleShowHint}>
-          <Toast.Header>
-            <img
-              src="holder.js/20x20?text=%20"
-              className="rounded me-2"
-              alt=""
-            />
-            <strong className="me-auto">For the best chance of winning:</strong>
-            {/* { "wins: ", stats. } */}
-          </Toast.Header>
-          <Toast.Body>This is where the hint message goes...</Toast.Body>
-        </Toast>
-      </Col>
+        <Col md={6} className="mb-2">
+          <Button onClick={toggleShowHint} className="mb-2">
+            Show Hint
+          </Button>
+          <Toast show={showHint} onClose={toggleShowHint}>
+            <Toast.Header>
+              <img
+                src="holder.js/20x20?text=%20"
+                className="rounded me-2"
+                alt=""
+              />
+              <strong className="me-auto">
+                For the best chance of winning:
+              </strong>
+              {/* { "wins: ", stats. } */}
+            </Toast.Header>
+            <Toast.Body>This is where the hint message goes...</Toast.Body>
+          </Toast>
+        </Col>
       </div>
-      
+
       <button
         type="button"
         className="btn btn-primary p-3 b-1"
@@ -344,7 +332,6 @@ function App() {
       <div className="d-flex justify-content-center">
         <h3 className="header">{message}</h3>
       </div>
-	  
 
       <div className="d-flex justify-content-center">
         <div className="btn-group btn-group-lg p-3 b-1">
