@@ -30,6 +30,49 @@ function App() {
   }, [message]);
 
   useEffect(() => {
+    let hasSoftAce = false;
+    for (let i = 0; i < playerHand.cards.length; i++) {
+        if (playerHand.cards[i].value === 'A') {
+          hasSoftAce = true;
+        }
+    if (phase === 'player') {
+      switch (playerHand.value) {
+        case 21:
+          if (playerHand.cards.length === 2) {
+            setHint("You have Blackjack!");
+          } else {
+            setHint("You should stand.")
+          }
+          break;
+        case 20:
+          setHint("You should stand.");
+          break;
+        case 19:
+          if (playerHand.cards.length === 2 && hasSoftAce && dealerHand.value === 6) {
+            setHint("You should double.");
+          } else {
+            setHint("You should stand.");
+          }
+          break;
+        case 18:
+          if (playerHand.cards.length === 2 && hasSoftAce && dealerHand.value <= 6) {
+            setHint("You should double.");
+          } else if (dealerHand.value > 8) {
+            setHint("You should hit.");
+          } else {
+            setHint("You should stand.");
+          }
+          break;
+          default:
+            setHint("Oh No!")
+            break;
+          }
+          
+      }
+    }
+  }, [playerHand.value]);
+
+  useEffect(() => {
     if (playerHand.value === 21 && playerHand.cards.length === 2) {
       setMessage("Blackjack!");
       setPhase("game over");
@@ -105,6 +148,7 @@ function App() {
         value: prev.value + evalCard(card),
       }));
     } else if (phase === "game over") {
+      setHint("Place a bet and press 'Deal'.")
       if (dealerHand.value > 21 && playerHand.value <= 21) {
         setMessage("Dealer Busted!");
       } else if (dealerHand.value > playerHand.value) {
@@ -124,27 +168,16 @@ function App() {
   const newHand = () => {
     setDeck(clearTable());
 
-    console.log(phase);
+    // console.log(phase);
     setPhase("player");
-    console.log(phase);
+    // console.log(phase);
 
-    // // Clear hands
-    // clearTable();
-    console.log(deck);
-
+    // console.log(deck);
     dealPlayer(deck[0]);
-    // setTimeout(() => {
     dealDealer(deck[1], false);
-    //   }, 500);
-    //   setTimeout(() => {
     dealPlayer(deck[2]);
-    //   }, 1000);
-    //   setTimeout(() => {
     dealDealer(deck[3]);
-    //   }, 1500);
-
     setMessage("Player's turn!");
-    // };
   };
 
   // Resets Hands and Deck
@@ -314,7 +347,7 @@ function App() {
               </strong>
               {/* { "wins: ", stats. } */}
             </Toast.Header>
-            <Toast.Body>This is where the hint message goes...</Toast.Body>
+            <Toast.Body> { hint } </Toast.Body>
           </Toast>
         </Col>
       </div>
