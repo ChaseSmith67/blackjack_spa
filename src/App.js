@@ -47,7 +47,7 @@ function App() {
   // }, [message]);
 
   /**
-   *  Determine what the best possible action the player can take and
+   *  Determine the best possible action the player can take and
    *  populate the toggleable hint box with the suggested action.
    */
   useEffect(() => {
