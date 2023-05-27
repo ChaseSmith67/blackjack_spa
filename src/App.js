@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import Container from "react-bootstrap/Container";
 import { createDeck } from "./components/Deck";
-import { Row, Col, Toast, Button } from "react-bootstrap";
+import { Row, Col, Toast, Button, ToastContainer } from "react-bootstrap";
 import getBlackJackStats from "./components/StatsService";
+
 
 function App() {
   // Deck of cards used to play the game.
@@ -20,16 +21,19 @@ function App() {
   const [dealerHand, setDealerHand] = useState({ cards: [], value: 0 });
 
   // Message diplayed, indicating whose turn it is or who won the game.
-  const [message, setMessage] = useState("Place a bet and press 'Deal'.");
+  const [message, setMessage] = useState("Place a bet and Deal.");
 
   // Hint shown to player, letting them know the action most likely to win.
-  const [hint, setHint] = useState("Place a bet and press 'Deal'.");
+  const [hint, setHint] = useState("Place a bet and Deal.");
 
   // Hides or displays the hint.
   const [showHint, setShowHint] = useState(false);
 
   // Used to manage the player's bet.
   const [bet, setBet] = useState(0);
+
+  // The player's current total chip count.
+  const [chips, setChips] = useState(100);
 
   // Sets the historical win statistics
   const [stats, setStats] = useState([]);
@@ -41,10 +45,6 @@ function App() {
   useEffect(() => {
     getBlackJackStats().then((stats) => setStats(stats)); // Retrieve the stats
   }, []);
-
-  // useEffect(() => {
-  //   console.log("message", message);
-  // }, [message]);
 
   /**
    *  Determine the best possible action the player can take and
@@ -272,7 +272,7 @@ function App() {
         value: prev.value + evalCard(card),
       }));
     } else if (phase === "game over") {
-      setHint("Place a bet and press 'Deal'.");
+      setHint("Place a bet and Deal.");
       if (dealerHand.value > 21 && playerHand.value <= 21) {
         setMessage("Dealer Busted!");
       } else if (dealerHand.value > playerHand.value) {
@@ -388,15 +388,45 @@ function App() {
     }
   };
 
+    const placeBet = () => {
+      setBet(bet);
+  }
+
+  const incrementBet = () => {
+      if ((bet + 5) <= chips) {
+      setBet(bet + 5);
+      } 
+  }
+
+  const decrementBet = () => {
+      if (bet >= 5) {
+      setBet(bet - 5);
+      }
+  }
+
+  const playerWin = (winnings=bet) => {
+      setChips(chips + winnings);
+  }
+
   return (
-    <Container className="p-1">
+    <Container className="p-1" >
+      <Row>
+        <Col>
       {stats.map((e) => (
-        <td>
-          <p>
-            {e.title} {e.count}
-          </p>
-        </td>
+          <Col>
+          <th>
+            {e.title} {e.count}    
+          </th>
+          </Col>
       ))}
+      </Col>
+      <Col xs={8} className="header">
+        <h3>Blackjack Trainer</h3>
+        </Col>
+      <Col>
+      <th> Your Chips: { chips }</th>
+      </Col>
+      </Row>
       <Container className="p-3 mb-4 bg-secondary rounded-3">
         <h1 className="header">Dealer's Cards</h1>
         <div className="d-flex justify-content-center">
@@ -453,14 +483,17 @@ function App() {
         </div>
         <div className="d-flex justify-content-center">{playerHand.value}</div>
       </Container>
-
-      <div className="d-flex justify-content-center">
-        <Col md={6} className="mb-2">
-          <Button onClick={toggleShowHint} className="mb-2">
+      
+      <Row xs={8}>
+      
+        <Col xs={3}>
+        <Button onClick={toggleShowHint} className="mb-2">
             Show Hint
           </Button>
-          <Toast show={showHint} onClose={toggleShowHint}>
-            <Toast.Header>
+          <ToastContainer containerPosition="position-fixed">
+          
+          <Toast show={showHint} onClose={toggleShowHint} className="mb-2">
+            {/* <Toast.Header>
               <img
                 src="holder.js/20x20?text=%20"
                 className="rounded me-2"
@@ -469,22 +502,29 @@ function App() {
               <strong className="me-auto">
                 For the best chance of winning:
               </strong>
-            </Toast.Header>
+            </Toast.Header> */}
             <Toast.Body> {hint} </Toast.Body>
           </Toast>
-        </Col>
-      </div>
+          </ToastContainer>
+          </Col>
 
+      
+      <Col xs={1}>
+      <div className="d-flex justify-content-center">
       <button
         type="button"
-        className="btn btn-primary p-3 b-1"
+        className="btn btn-primary p-3 b-2"
         onClick={() => {
           newHand();
         }}
       >
         Deal
       </button>
+      </div>
 
+      </Col>
+        <Col xs={4}>
+      <Container>
       <div className="d-flex justify-content-center">
         <h3 className="header">{message}</h3>
       </div>
@@ -525,6 +565,46 @@ function App() {
           </button>
         </div>
       </div>
+      </Container>
+      </Col>
+      <Col xs={2}>
+      <Container>
+        <div className="d-flex justify-content-center">
+        <h3>Bet: { bet }</h3>
+        </div>
+        {/* <div className="d-flex justify-content-center"> */}
+        <div className="btn-group p-3 b-1">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => {
+              decrementBet();
+            }}
+          >
+            Bet Less
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => {
+              placeBet();
+            }}
+          >
+            Place Bet
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => {incrementBet();}}
+          >
+            Bet More
+          </button>
+        </div>
+        {/* </div> */}
+        </Container>
+        </Col>
+        </Row>
+        
     </Container>
   );
 }
