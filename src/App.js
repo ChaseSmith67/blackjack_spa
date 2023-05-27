@@ -277,13 +277,17 @@ function App() {
       setHint("Place a bet and Deal.");
       if (dealerHand.value > 21 && playerHand.value <= 21) {
         setMessage("Dealer Busted!");
+        playerWin();
       } else if (dealerHand.value > playerHand.value) {
         setMessage("Dealer Wins!");
+        setCurrentBet(0);
       } else if (dealerHand.value < playerHand.value) {
         if (playerHand.value > 21) {
           setMessage("Player Busted!");
+          setCurrentBet(0);
         } else {
           setMessage("Player Wins!");
+           playerWin();
         }
       } else {
         setMessage("Push!");
@@ -332,7 +336,7 @@ function App() {
   // Deal a card from the deck to the player
   const dealPlayer = (card) => {
     if (card.value === "H") {
-      card.value = "A";
+      card.value = "A";       // Reset Hard Aces
     }
     setPlayerHand((prev) => ({
       ...prev,
@@ -345,7 +349,7 @@ function App() {
   // Deal a card from the deck to the dealer
   const dealDealer = (card, visible = true) => {
     if (card.value === "H") {
-      card.value = "A";
+      card.value = "A";       // Reset Hard Aces
     }
     card.visible = visible;
     if (visible) {
@@ -369,11 +373,17 @@ function App() {
     }
   };
 
-  // End turn after player doubles
+  // End turn after player doubles and double bet.
   const doubleDown = () => {
     if (phase === "player") {
-      dealPlayer(deck[0]);
-      setPhase("dealer");
+      if (chips >= currentBet) {
+        setChips(chips => chips - currentBet);
+        setCurrentBet(currentBet => currentBet * 2)
+        dealPlayer(deck[0]);
+        setPhase("dealer");
+      } else {
+        window.alert("You don't have enough chips to double!");
+      }
     } else {
       window.alert("It's not your turn!");
     }
@@ -391,7 +401,13 @@ function App() {
   };
 
   const placeBet = () => {
-    setCurrentBet(bet);
+    if (bet > currentBet) {
+      setChips(chips => (chips - bet + currentBet));
+      setCurrentBet(bet);
+    } else if (bet < currentBet) {
+      setChips(chips => (chips + currentBet - bet));
+      setCurrentBet(bet);
+    }
   };
 
   const incrementBet = () => {
@@ -406,8 +422,8 @@ function App() {
     }
   };
 
-  const playerWin = (winnings = bet) => {
-    setChips(chips + winnings);
+  const playerWin = (winnings = currentBet) => {
+    setChips(chips => (chips + winnings));
   };
 
   return (
