@@ -31,6 +31,9 @@ function App() {
   // Used to manage the player's bet.
   const [bet, setBet] = useState(0);
 
+  // Used for the player's current locked bet.
+  const [currentBet, setCurrentBet] = useState(0);
+
   // The player's current total chip count.
   const [chips, setChips] = useState(100);
 
@@ -388,7 +391,7 @@ function App() {
   };
 
   const placeBet = () => {
-    setBet(bet);
+    setCurrentBet(bet);
   };
 
   const incrementBet = () => {
@@ -427,7 +430,7 @@ function App() {
         </Col>
       </Row>
       <Container className="p-3 mb-4 bg-secondary rounded-3">
-        <h1 className="header">Dealer's Cards</h1>
+        <h1 className="header">Dealer's Hand  &#40; { dealerHand.value } &#41;</h1>
         <div className="d-flex justify-content-center">
           <td>
             <img src="images/Empty.png" alt="" width="100" height="150" />
@@ -460,11 +463,10 @@ function App() {
             <img src="images/Empty.png" alt="" width="100" height="150" />
           </td>
         </div>
-        <div className="d-flex justify-content-center">{dealerHand.value} </div>
       </Container>
 
       <Container className="p-3 mb-4 bg-secondary rounded-3">
-        <h1 className="header">Your Cards</h1>
+        <h1 className="header">Your Hand  &#40; { playerHand.value } &#41;</h1>
         <div className="d-flex justify-content-center">
           <td>
             <img src="images/Empty.png" alt="" width="100" height="150" />
@@ -480,7 +482,7 @@ function App() {
             <img src="images/Empty.png" alt="" width="100" height="150" />
           </td>
         </div>
-        <div className="d-flex justify-content-center">{playerHand.value}</div>
+        <div className="d-flex justify-content-center p-2" style={{"font-size":"24px"}}>Current Bet: { currentBet }</div>
       </Container>
 
       <Row xs={10}>
@@ -563,7 +565,7 @@ function App() {
         <Col md="auto">
           <Row>
             <div className="d-flex justify-content-center">
-              <h3>Bet: {bet}</h3>
+              <h4>Change Bet: {bet}</h4>
             </div>
           </Row>
           <Row>
