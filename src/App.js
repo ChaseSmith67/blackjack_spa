@@ -5,7 +5,6 @@ import { createDeck } from "./components/Deck";
 import { Row, Col, Toast, Button, ToastContainer } from "react-bootstrap";
 import getBlackJackStats from "./components/StatsService";
 
-
 function App() {
   // Deck of cards used to play the game.
   const [deck, setDeck] = useState(createDeck());
@@ -388,44 +387,44 @@ function App() {
     }
   };
 
-    const placeBet = () => {
-      setBet(bet);
-  }
+  const placeBet = () => {
+    setBet(bet);
+  };
 
   const incrementBet = () => {
-      if ((bet + 5) <= chips) {
+    if (bet + 5 <= chips) {
       setBet(bet + 5);
-      } 
-  }
+    }
+  };
 
   const decrementBet = () => {
-      if (bet >= 5) {
+    if (bet >= 5) {
       setBet(bet - 5);
-      }
-  }
+    }
+  };
 
-  const playerWin = (winnings=bet) => {
-      setChips(chips + winnings);
-  }
+  const playerWin = (winnings = bet) => {
+    setChips(chips + winnings);
+  };
 
   return (
-    <Container className="p-1" >
+    <Container className="p-1">
       <Row>
         <Col>
-      {stats.map((e) => (
-          <Col>
-          <th>
-            {e.title} {e.count}    
-          </th>
-          </Col>
-      ))}
-      </Col>
-      <Col xs={8} className="header">
-        <h3>Blackjack Trainer</h3>
+          {stats.map((e) => (
+            <Col>
+              <th>
+                {e.title} {e.count}
+              </th>
+            </Col>
+          ))}
         </Col>
-      <Col>
-      <th> Your Chips: { chips }</th>
-      </Col>
+        <Col xs={8} className="header">
+          <h3>Blackjack Trainer</h3>
+        </Col>
+        <Col className="header">
+          <th> Your Chips: {chips}</th>
+        </Col>
       </Row>
       <Container className="p-3 mb-4 bg-secondary rounded-3">
         <h1 className="header">Dealer's Cards</h1>
@@ -483,17 +482,15 @@ function App() {
         </div>
         <div className="d-flex justify-content-center">{playerHand.value}</div>
       </Container>
-      
-      <Row xs={8}>
-      
+
+      <Row xs={10}>
         <Col xs={3}>
-        <Button onClick={toggleShowHint} className="mb-2">
+          <Button onClick={toggleShowHint} className="mb-2 btn-info">
             Show Hint
           </Button>
           <ToastContainer containerPosition="position-fixed">
-          
-          <Toast show={showHint} onClose={toggleShowHint} className="mb-2">
-            {/* <Toast.Header>
+            <Toast show={showHint} onClose={toggleShowHint} className="mb-2">
+              {/* <Toast.Header>
               <img
                 src="holder.js/20x20?text=%20"
                 className="rounded me-2"
@@ -503,108 +500,105 @@ function App() {
                 For the best chance of winning:
               </strong>
             </Toast.Header> */}
-            <Toast.Body> {hint} </Toast.Body>
-          </Toast>
+              <Toast.Body> {hint} </Toast.Body>
+            </Toast>
           </ToastContainer>
-          </Col>
+        </Col>
 
-      
-      <Col xs={1}>
-      <div className="d-flex justify-content-center">
-      <button
-        type="button"
-        className="btn btn-primary p-3 b-2"
-        onClick={() => {
-          newHand();
-        }}
-      >
-        Deal
-      </button>
-      </div>
-
-      </Col>
+        <Col xs={1}>
+          <button
+            type="button"
+            className="btn btn-success p-3 pt-5 pb-5 b-2"
+            onClick={() => {
+              newHand();
+            }}
+          >
+            Deal
+          </button>
+        </Col>
         <Col xs={4}>
-      <Container>
-      <div className="d-flex justify-content-center">
-        <h3 className="header">{message}</h3>
-      </div>
+          <Container>
+            <Row>
+              <h3 className="header">{message}</h3>
+            </Row>
 
-      <div className="d-flex justify-content-center">
-        <div className="btn-group btn-group-lg p-3 b-1">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => {
-              playerHit();
-            }}
-          >
-            Hit
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => {
-              endTurn();
-            }}
-          >
-            Stand
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => doubleDown()}
-          >
-            Double
-          </button>
-          <button
+            <Row>
+              <div className="btn-group btn-group-lg p-3 b-1">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => {
+                    playerHit();
+                  }}
+                >
+                  Hit
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => {
+                    endTurn();
+                  }}
+                >
+                  Stand
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => doubleDown()}
+                >
+                  Double
+                </button>
+                {/* <button
             type="button"
             className="btn btn-primary"
             onClick={() => console.log("split")}
           >
             Split
-          </button>
-        </div>
-      </div>
-      </Container>
-      </Col>
-      <Col xs={2}>
-      <Container>
-        <div className="d-flex justify-content-center">
-        <h3>Bet: { bet }</h3>
-        </div>
-        {/* <div className="d-flex justify-content-center"> */}
-        <div className="btn-group p-3 b-1">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => {
-              decrementBet();
-            }}
-          >
-            Bet Less
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => {
-              placeBet();
-            }}
-          >
-            Place Bet
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => {incrementBet();}}
-          >
-            Bet More
-          </button>
-        </div>
-        {/* </div> */}
-        </Container>
+          </button> */}
+              </div>
+            </Row>
+          </Container>
         </Col>
-        </Row>
-        
+        <Col md="auto">
+          <Row>
+            <div className="d-flex justify-content-center">
+              <h3>Bet: {bet}</h3>
+            </div>
+          </Row>
+          <Row>
+            <div className="btn-group btn-group-xs p-3 b-5">
+              <button
+                type="button"
+                className="btn btn-warning"
+                onClick={() => {
+                  decrementBet();
+                }}
+              >
+                Bet Less
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger"
+                onClick={() => {
+                  placeBet();
+                }}
+              >
+                Place Bet
+              </button>
+              <button
+                type="button"
+                className="btn btn-warning"
+                onClick={() => {
+                  incrementBet();
+                }}
+              >
+                Bet More
+              </button>
+            </div>
+          </Row>
+        </Col>
+      </Row>
     </Container>
   );
 }
