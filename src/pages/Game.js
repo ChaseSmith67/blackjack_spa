@@ -296,16 +296,20 @@ function Game() {
   }, [phase]);
 
   const newHand = () => {
-    setDeck(clearTable());
+    if (currentBet > 0) {
+      setDeck(clearTable());
 
-    setPhase("player");
+      setPhase("player");
 
-    // Deal first 4 cards
-    dealPlayer(deck[0]);
-    dealDealer(deck[1], false); // Face-down card for dealer
-    dealPlayer(deck[2]);
-    dealDealer(deck[3]);
-    setMessage("Player's turn!");
+      // Deal first 4 cards
+      dealPlayer(deck[0]);
+      dealDealer(deck[1], false); // Face-down card for dealer
+      dealPlayer(deck[2]);
+      dealDealer(deck[3]);
+      setMessage("Player's turn!");
+    } else {
+      window.alert("You must place a bet to play.");
+    }
   };
 
   // Resets Hands and Deck
