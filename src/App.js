@@ -3,6 +3,7 @@ import React from "react";
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
+import Tutorial from "./pages/Tutorial";
 
 function App() {
     return (
@@ -10,7 +11,7 @@ function App() {
             <NavBar />
             <Routes>
                 <Route exact path='/' element={<Game />} />
-                <Route path='/game' element={<Game />} />
+                <Route path='/tutorial' element={<Tutorial />} />
             </Routes>
         </Router>
     );
