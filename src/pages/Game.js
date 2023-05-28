@@ -445,7 +445,7 @@ function Game() {
           <th> Your Chips: {chips}</th>
         </Col>
       </Row>
-      <Container className="p-3 mb-4 bg-secondary rounded-3">
+      <Container className="p-3 mb-4 bg-success rounded-3">
         <h1 className="header">Dealer's Hand  &#40; { dealerHand.value } &#41;</h1>
         <div className="d-flex justify-content-center">
           <td>
@@ -479,9 +479,9 @@ function Game() {
             <img src="images/Empty.png" alt="" width="100" height="150" />
           </td>
         </div>
-      </Container>
+      {/* </Container>
 
-      <Container className="p-3 mb-4 bg-secondary rounded-3">
+      <Container className="p-3 mb-4 bg-secondary rounded-3"> */}
         <h1 className="header">Your Hand  &#40; { playerHand.value } &#41;</h1>
         <div className="d-flex justify-content-center">
           <td>
@@ -508,25 +508,15 @@ function Game() {
           </Button>
           <ToastContainer containerPosition="position-fixed">
             <Toast show={showHint} onClose={toggleShowHint} className="mb-2">
-              {/* <Toast.Header>
-              <img
-                src="holder.js/20x20?text=%20"
-                className="rounded me-2"
-                alt=""
-              />
-              <strong className="me-auto">
-                For the best chance of winning:
-              </strong>
-            </Toast.Header> */}
               <Toast.Body> {hint} </Toast.Body>
             </Toast>
           </ToastContainer>
         </Col>
-
+            
         <Col xs={1}>
           <button
             type="button"
-            className="btn btn-success p-3 pt-5 pb-5 b-2"
+            className="btn btn-primary p-3 pt-5 pb-5 b-2"
             onClick={() => {
               newHand();
             }}
@@ -579,6 +569,7 @@ function Game() {
           </Container>
         </Col>
         <Col md="auto">
+          <Container className="card bg-secondary p-2 m-2">
           <Row>
             <div className="d-flex justify-content-center">
               <h4>Change Bet: {bet}</h4>
@@ -615,6 +606,7 @@ function Game() {
               </button>
             </div>
           </Row>
+          </Container>
         </Col>
       </Row>
     </Container>
