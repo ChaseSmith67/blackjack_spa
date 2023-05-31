@@ -194,6 +194,7 @@ function App() {
   useEffect(() => {
     if (playerHand.value === 21 && playerHand.cards.length === 2) {
       setMessage("Blackjack!");
+      playerWin(1.5 * currentBet);
       setPhase("game over");
     } else if (playerHand.value > 21) {
       let hasAce = false;
@@ -274,28 +275,31 @@ function App() {
         value: prev.value + evalCard(card),
       }));
     } else if (phase === "game over") {
-      setHint("Place a bet and Deal.");
-      if (dealerHand.value > 21 && playerHand.value <= 21) {
-        setMessage("Dealer Busted!");
-        playerWin();
-      } else if (dealerHand.value > playerHand.value) {
-        setMessage("Dealer Wins!");
-        setCurrentBet(0);
-      } else if (dealerHand.value < playerHand.value) {
-        if (playerHand.value > 21) {
-          setMessage("Player Busted!");
+      if (message !== "Blackjack!") {
+        setHint("Place a bet and Deal.");
+        if (dealerHand.value > 21 && playerHand.value <= 21) {
+          setMessage("Dealer Busted!");
+          playerWin();
+        } else if (dealerHand.value > playerHand.value) {
+          setMessage("Dealer Wins!");
           setCurrentBet(0);
+        } else if (dealerHand.value < playerHand.value) {
+          if (playerHand.value > 21) {
+            setMessage("Player Busted!");
+            setCurrentBet(0);
+          } else {
+            setMessage("Player Wins!");
+            playerWin();
+          }
         } else {
-          setMessage("Player Wins!");
-           playerWin();
+          setMessage("Push!");
         }
-      } else {
-        setMessage("Push!");
       }
-    }
+  }
   }, [phase]);
 
   const newHand = () => {
+    if (currentBet > 0) {
     setDeck(clearTable());
 
     setPhase("player");
@@ -306,6 +310,9 @@ function App() {
     dealPlayer(deck[2]);
     dealDealer(deck[3]);
     setMessage("Player's turn!");
+    } else {
+      window.alert("You must place a bet to play!");
+    }
   };
 
   // Resets Hands and Deck
@@ -423,7 +430,8 @@ function App() {
   };
 
   const playerWin = (winnings = currentBet) => {
-    setChips(chips => (chips + winnings));
+    setChips(chips => (chips + winnings + currentBet));
+    setCurrentBet(0);
   };
 
   return (
