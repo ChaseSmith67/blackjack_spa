@@ -64,7 +64,8 @@ function Tutorial() {
               <li>Face cards &#40;J, K, Q&#41; are worth 10.</li>
               <li>
                 Aces are worth either 1 or 11, depending on the value of the
-                hand.{" "}
+                hand. &#40;If the hand value would exceed 21 with the Ace being
+                valued at 11, then the Ace will be worth 1.&#41;
               </li>
             </ul>
           </p>
