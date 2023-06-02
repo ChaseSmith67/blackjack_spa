@@ -228,7 +228,7 @@ function Game() {
         ) {
           dealerHand.cards[0].visible = true;
           setMessage("Dealer Blackjack!");
-          setPhase("game over");
+          setPhase("dealer");
         }
         // This is where Insurance would go. Not sure about that yet.
       }
@@ -273,14 +273,19 @@ function Game() {
         ...prev,
         value: prev.value + evalCard(card),
       }));
+      
     } else if (phase === "game over") {
       setHint("Place a bet and Deal.");
       if (dealerHand.value > 21 && playerHand.value <= 21) {
         setMessage("Dealer Busted!");
         playerWin();
       } else if (dealerHand.value > playerHand.value) {
-        setMessage("Dealer Wins!");
         setCurrentBet(0);
+        if (dealerHand.cards.length === 2 && dealerHand.value === 21) {
+          setMessage("Dealer Blackjack!");
+        } else {
+          setMessage("Dealer Wins!");
+        }
       } else if (dealerHand.value < playerHand.value) {
         if (playerHand.value > 21) {
           setMessage("Player Busted!");
@@ -432,19 +437,23 @@ function Game() {
 
   return (
     <Container className="p-1">
-      <Row>
+      <Row >
         <Col>
           {stats.map((e) => (
             <Col>
+              <Container className="card bg-secondary p-2 m-2">
               <th>
                 {e.title} {e.count}
               </th>
+              </Container>
             </Col>
           ))}
         </Col>
         <Col xs={8} className="header"></Col>
         <Col className="header">
+        <Container className="card bg-secondary p-2 m-2">
           <th> Your Chips: {chips}</th>
+          </Container>
         </Col>
       </Row>
       <Container className="p-3 mb-4 bg-success rounded-3">
