@@ -287,7 +287,7 @@ function Game() {
           setCurrentBet(0);
         } else {
           setMessage("Player Wins!");
-           playerWin();
+          playerWin();
         }
       } else {
         setMessage("Push!");
@@ -340,7 +340,7 @@ function Game() {
   // Deal a card from the deck to the player
   const dealPlayer = (card) => {
     if (card.value === "H") {
-      card.value = "A";       // Reset Hard Aces
+      card.value = "A"; // Reset Hard Aces
     }
     setPlayerHand((prev) => ({
       ...prev,
@@ -353,7 +353,7 @@ function Game() {
   // Deal a card from the deck to the dealer
   const dealDealer = (card, visible = true) => {
     if (card.value === "H") {
-      card.value = "A";       // Reset Hard Aces
+      card.value = "A"; // Reset Hard Aces
     }
     card.visible = visible;
     if (visible) {
@@ -381,8 +381,8 @@ function Game() {
   const doubleDown = () => {
     if (phase === "player") {
       if (chips >= currentBet) {
-        setChips(chips => chips - currentBet);
-        setCurrentBet(currentBet => currentBet * 2)
+        setChips((chips) => chips - currentBet);
+        setCurrentBet((currentBet) => currentBet * 2);
         dealPlayer(deck[0]);
         setPhase("dealer");
       } else {
@@ -406,10 +406,10 @@ function Game() {
 
   const placeBet = () => {
     if (bet > currentBet) {
-      setChips(chips => (chips - bet + currentBet));
+      setChips((chips) => chips - bet + currentBet);
       setCurrentBet(bet);
     } else if (bet < currentBet) {
-      setChips(chips => (chips + currentBet - bet));
+      setChips((chips) => chips + currentBet - bet);
       setCurrentBet(bet);
     }
   };
@@ -427,7 +427,7 @@ function Game() {
   };
 
   const playerWin = (winnings = currentBet) => {
-    setChips(chips => (chips + winnings));
+    setChips((chips) => chips + winnings);
   };
 
   return (
@@ -442,15 +442,13 @@ function Game() {
             </Col>
           ))}
         </Col>
-        <Col xs={8} className="header">
-          
-        </Col>
+        <Col xs={8} className="header"></Col>
         <Col className="header">
           <th> Your Chips: {chips}</th>
         </Col>
       </Row>
       <Container className="p-3 mb-4 bg-success rounded-3">
-        <h1 className="header">Dealer's Hand  &#40; { dealerHand.value } &#41;</h1>
+        <h1 className="header">Dealer's Hand &#40; {dealerHand.value} &#41;</h1>
         <div className="d-flex justify-content-center">
           <td>
             <img src="images/Empty.png" alt="" width="100" height="150" />
@@ -483,10 +481,10 @@ function Game() {
             <img src="images/Empty.png" alt="" width="100" height="150" />
           </td>
         </div>
-      {/* </Container>
+        {/* </Container>
 
       <Container className="p-3 mb-4 bg-secondary rounded-3"> */}
-        <h1 className="header">Your Hand  &#40; { playerHand.value } &#41;</h1>
+        <h1 className="header">Your Hand &#40; {playerHand.value} &#41;</h1>
         <div className="d-flex justify-content-center">
           <td>
             <img src="images/Empty.png" alt="" width="100" height="150" />
@@ -502,7 +500,12 @@ function Game() {
             <img src="images/Empty.png" alt="" width="100" height="150" />
           </td>
         </div>
-        <div className="d-flex justify-content-center p-2" style={{"font-size":"24px"}}>Current Bet: { currentBet }</div>
+        <div
+          className="d-flex justify-content-center p-2"
+          style={{ "font-size": "24px" }}
+        >
+          Current Bet: {currentBet}
+        </div>
       </Container>
 
       <Row xs={10}>
@@ -516,7 +519,7 @@ function Game() {
             </Toast>
           </ToastContainer>
         </Col>
-            
+
         <Col xs={1}>
           <button
             type="button"
@@ -574,42 +577,42 @@ function Game() {
         </Col>
         <Col md="auto">
           <Container className="card bg-secondary p-2 m-2">
-          <Row>
-            <div className="d-flex justify-content-center">
-              <h4>Change Bet: {bet}</h4>
-            </div>
-          </Row>
-          <Row>
-            <div className="btn-group btn-group-xs p-3 b-5">
-              <button
-                type="button"
-                className="btn btn-warning"
-                onClick={() => {
-                  decrementBet();
-                }}
-              >
-                Bet Less
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() => {
-                  placeBet();
-                }}
-              >
-                Place Bet
-              </button>
-              <button
-                type="button"
-                className="btn btn-warning"
-                onClick={() => {
-                  incrementBet();
-                }}
-              >
-                Bet More
-              </button>
-            </div>
-          </Row>
+            <Row>
+              <div className="d-flex justify-content-center">
+                <h4>Change Bet: {bet}</h4>
+              </div>
+            </Row>
+            <Row>
+              <div className="btn-group btn-group-xs p-3 b-5">
+                <button
+                  type="button"
+                  className="btn btn-warning"
+                  onClick={() => {
+                    decrementBet();
+                  }}
+                >
+                  Bet Less
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => {
+                    placeBet();
+                  }}
+                >
+                  Place Bet
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-warning"
+                  onClick={() => {
+                    incrementBet();
+                  }}
+                >
+                  Bet More
+                </button>
+              </div>
+            </Row>
           </Container>
         </Col>
       </Row>
