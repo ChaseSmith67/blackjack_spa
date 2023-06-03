@@ -4,7 +4,7 @@
 
 const apiURL = "http://localhost:3033/"; // API URL
 
-export async function getBlackJackStats(user = null) {
+async function getBlackJackStats(user = null) {
   if (user) {
     const options = {
       method: "GET",
@@ -25,7 +25,7 @@ export async function getBlackJackStats(user = null) {
   }
 }
 
-export async function addWin(user) {
+async function addWin(user) {
   const options = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -38,7 +38,7 @@ export async function addWin(user) {
   }
 }
 
-export async function addLoss(user) {
+async function addLoss(user) {
   const options = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -50,3 +50,5 @@ export async function addLoss(user) {
     return data;
   }
 }
+
+export { getBlackJackStats, addWin, addLoss };
