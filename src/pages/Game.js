@@ -3,7 +3,7 @@ import "../App.css";
 import Container from "react-bootstrap/Container";
 import { createDeck } from "../components/Deck";
 import { Row, Col, Toast, Button, ToastContainer } from "react-bootstrap";
-import getBlackJackStats from "../components/StatsService";
+import { getBlackJackStats, addWin, addLoss } from "../components/StatsService";
 
 function Game() {
   // Deck of cards used to play the game.
@@ -439,7 +439,7 @@ function Game() {
     <Container className="p-1">
       <Row >
         <Col>
-          {stats.map((e) => (
+          {/* {stats.map((e) => (
             <Col>
               <Container className="card bg-secondary p-2 m-2">
               <th>
@@ -447,7 +447,17 @@ function Game() {
               </th>
               </Container>
             </Col>
-          ))}
+          ))} */}
+          <Container className="card bg-secondary p-2 m-2">
+            {stats.map(function (e) {
+              if (!e) {
+                return (<div>Enter your name to track stats.</div>)
+              } else {
+                return (<div>Wins: {e.wins} Losses: {e.losses}</div>)
+              }
+            })}
+            
+          </Container>
         </Col>
         <Col xs={8} className="header"></Col>
         <Col className="header">
