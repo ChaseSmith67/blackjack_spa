@@ -1,19 +1,52 @@
 /**
- *  Retrieve statistics from the database via API call.
+ *  Retrieve and update statistics from the database via API call.
  */
 
-const apiURL = 'http://localhost:3033/win/loss'; // API URL
+const apiURL = "http://localhost:3033/"; // API URL
 
-export default async function getBlackJackStats() {
-  const response = await fetch(apiURL);
+export async function getBlackJackStats(user = null) {
+  if (user) {
+    const options = {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      body: { name: user },
+    };
+    const response = await fetch(apiURL + "stats", options);
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+  } else {
+    const response = await fetch(apiURL + "win/loss");
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+  }
+}
+
+export async function addWin(user) {
+  const options = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: { name: user },
+  };
+  const response = await fetch(apiURL + "win", options);
   if (response.ok) {
     const data = await response.json();
     return data;
   }
 }
 
-
-
-
-
-
+export async function addLoss(user) {
+  const options = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: { name: user },
+  };
+  const response = await fetch(apiURL + "loss", options);
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  }
+}
