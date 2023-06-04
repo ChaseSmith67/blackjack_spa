@@ -448,7 +448,7 @@ function Game() {
                 } else {
                   return (<div>Wins: {e.wins} &nbsp;
                   Losses: {e.losses} <br></br>
-                  Win/Loss: &nbsp; {((e.wins)/(e.wins + e.losses))*100}%</div>)
+                  Win/Loss: &nbsp; {(((e.wins)/(e.wins + e.losses))*100).toFixed(2)}%</div>)
                 }
               }
             )}

@@ -5,13 +5,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Tutorial from "./pages/Tutorial";
 import Statistics from "./pages/Statistics";
-import { useState } from "react";
-
 
 
 function App() {
-
-    const [name, setName] = useState(null);
 
     return (
         <Router>
