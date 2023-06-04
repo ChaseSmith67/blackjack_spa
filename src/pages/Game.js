@@ -441,9 +441,15 @@ function Game() {
         <Col>
           <Container className="card bg-secondary p-2 m-2">
             {stats.map(function (e) {
-                return (<div>Wins: {e.wins} &nbsp;
-                Losses: {e.losses} <br></br>
-                Win/Loss: &nbsp; {((e.wins)/(e.wins + e.losses))*100}%</div>)
+                if (e.wins === 0 && e.losses === 0) {
+                  return (<div>Wins: {e.wins} &nbsp;
+                    Losses: {e.losses} <br></br>
+                    Win/Loss: &nbsp; 0%</div>)
+                } else {
+                  return (<div>Wins: {e.wins} &nbsp;
+                  Losses: {e.losses} <br></br>
+                  Win/Loss: &nbsp; {((e.wins)/(e.wins + e.losses))*100}%</div>)
+                }
               }
             )}
           </Container>
