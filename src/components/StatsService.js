@@ -44,6 +44,7 @@ async function resetStats() {
   const response = await fetch(apiURL + "reset", options);
   if (response.ok) {
     const data = await response.json();
+    document.location.reload();
     return data;
   }
 }
