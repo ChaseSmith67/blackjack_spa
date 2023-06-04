@@ -281,6 +281,7 @@ function Game() {
         playerWin();
       } else if (dealerHand.value > playerHand.value) {
         setCurrentBet(0);
+        addLoss();
         if (dealerHand.cards.length === 2 && dealerHand.value === 21) {
           setMessage("Dealer Blackjack!");
         } else {
@@ -433,6 +434,7 @@ function Game() {
 
   const playerWin = (winnings = currentBet) => {
     setChips((chips) => chips + winnings);
+    addWin();
   };
 
   return (
