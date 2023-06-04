@@ -439,36 +439,33 @@ function Game() {
     <Container className="p-1">
       <Row >
         <Col>
-          {/* {stats.map((e) => (
-            <Col>
-              <Container className="card bg-secondary p-2 m-2">
-              <th>
-                {e.title} {e.count}
-              </th>
-              </Container>
-            </Col>
-          ))} */}
           <Container className="card bg-secondary p-2 m-2">
             {stats.map(function (e) {
-              if (!e) {
-                return (<div>Enter your name to track stats.</div>)
-              } else {
-                return (<div>Wins: {e.wins} Losses: {e.losses}</div>)
+                return (<div>Wins: {e.wins} &nbsp;
+                Losses: {e.losses} <br></br>
+                Win/Loss: &nbsp; {((e.wins)/(e.wins + e.losses))*100}%</div>)
               }
-            })}
-            
+            )}
           </Container>
         </Col>
         <Col xs={8} className="header"></Col>
         <Col className="header">
         <Container className="card bg-secondary p-2 m-2">
-          <th> Your Chips: {chips}</th>
+          <table>
+            <thead>
+          <tr> 
+            <th>Your Chips: {chips}</th>
+            </tr>
+          </thead>
+          </table>
           </Container>
         </Col>
       </Row>
       <Container className="p-3 mb-4 bg-success rounded-3">
         <h1 className="header">Dealer's Hand &#40; {dealerHand.value} &#41;</h1>
-        <div className="d-flex justify-content-center">
+        <table className="d-flex justify-content-center">
+        <thead>
+        <tr className="d-flex justify-content-center">
           <td>
             <img src="images/Empty.png" alt="" width="100" height="150" />
           </td>
@@ -499,12 +496,13 @@ function Game() {
           <td>
             <img src="images/Empty.png" alt="" width="100" height="150" />
           </td>
-        </div>
-        {/* </Container>
-
-      <Container className="p-3 mb-4 bg-secondary rounded-3"> */}
+        </tr>
+        </thead>
+        </table>
         <h1 className="header">Your Hand &#40; {playerHand.value} &#41;</h1>
-        <div className="d-flex justify-content-center">
+        <table className="d-flex justify-content-center">
+        <thead>
+        <tr className="d-flex justify-content-center">
           <td>
             <img src="images/Empty.png" alt="" width="100" height="150" />
           </td>
@@ -518,10 +516,12 @@ function Game() {
           <td>
             <img src="images/Empty.png" alt="" width="100" height="150" />
           </td>
-        </div>
+        </tr>
+        </thead>
+        </table>
         <div
           className="d-flex justify-content-center p-2"
-          style={{ "font-size": "24px" }}
+          style={{ "fontSize": "24px" }}
         >
           Current Bet: {currentBet}
         </div>
