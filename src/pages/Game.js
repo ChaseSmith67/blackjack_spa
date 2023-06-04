@@ -44,10 +44,6 @@ function Game() {
     setShowHint(!showHint); // Show or hide the hint.
   };
 
-  useEffect(() => {
-    getBlackJackStats().then((stats) => setStats(stats)); // Retrieve the stats
-  }, []);
-
   /**
    *  Determine the best possible action the player can take and
    *  populate the toggleable hint box with the suggested action.
@@ -273,7 +269,6 @@ function Game() {
         ...prev,
         value: prev.value + evalCard(card),
       }));
-      
     } else if (phase === "game over") {
       setHint("Place a bet and Deal.");
       if (dealerHand.value > 21 && playerHand.value <= 21) {
@@ -301,6 +296,12 @@ function Game() {
     }
   }, [phase]);
 
+  // Update stats whenever player wins or loses
+  useEffect(() => {
+    getBlackJackStats().then((stats) => setStats(stats)); // Retrieve the stats
+  }, [chips]);
+
+  // Start a new hand
   const newHand = () => {
     if (currentBet > 0) {
       setDeck(clearTable());
@@ -410,6 +411,7 @@ function Game() {
     }
   };
 
+  // Finialize player's bet, removing chips from bank
   const placeBet = () => {
     if (bet > currentBet) {
       setChips((chips) => chips - bet + currentBet);
@@ -420,18 +422,21 @@ function Game() {
     }
   };
 
+  // Increase current bet by desired amount
   const incrementBet = () => {
     if (bet + 5 <= chips) {
       setBet(bet + 5);
     }
   };
 
+  // Decrease bet by desired amount
   const decrementBet = () => {
     if (bet >= 5) {
       setBet(bet - 5);
     }
   };
 
+  // Adds chips to player bank and adds win to stats DB
   const playerWin = (winnings = currentBet) => {
     setChips((chips) => chips + winnings);
     addWin();
@@ -439,97 +444,103 @@ function Game() {
 
   return (
     <Container className="p-1">
-      <Row >
+      <Row>
         <Col>
           <Container className="card bg-secondary p-2 m-2">
             {stats.map(function (e) {
-                if (e.wins === 0 && e.losses === 0) {
-                  return (<div>Wins: {e.wins} &nbsp;
-                    Losses: {e.losses} <br></br>
-                    Win/Loss: &nbsp; 0%</div>)
-                } else {
-                  return (<div>Wins: {e.wins} &nbsp;
-                  Losses: {e.losses} <br></br>
-                  Win/Loss: &nbsp; {(((e.wins)/(e.wins + e.losses))*100).toFixed(2)}%</div>)
-                }
+              if (e.wins === 0 && e.losses === 0) {
+                return (
+                  <div>
+                    Wins: {e.wins} &nbsp; Losses: {e.losses} <br></br>
+                    Win/Loss: &nbsp; 0%
+                  </div>
+                );
+              } else {
+                return (
+                  <div>
+                    Wins: {e.wins} &nbsp; Losses: {e.losses} <br></br>
+                    Win/Loss: &nbsp;{" "}
+                    {((e.wins / (e.wins + e.losses)) * 100).toFixed(2)}%
+                  </div>
+                );
               }
-            )}
+            })}
           </Container>
         </Col>
         <Col xs={8} className="header"></Col>
         <Col className="header">
-        <Container className="card bg-secondary p-2 m-2">
-          <table>
-            <thead>
-          <tr> 
-            <th>Your Chips: {chips}</th>
-            </tr>
-          </thead>
-          </table>
+          <Container className="card bg-secondary p-2 m-2">
+            <table>
+              <thead>
+                <tr>
+                  <th>Your Chips: {chips}</th>
+                </tr>
+              </thead>
+            </table>
           </Container>
         </Col>
       </Row>
       <Container className="p-3 mb-4 bg-success rounded-3">
         <h1 className="header">Dealer's Hand &#40; {dealerHand.value} &#41;</h1>
         <table className="d-flex justify-content-center">
-        <thead>
-        <tr className="d-flex justify-content-center">
-          <td>
-            <img src="images/Empty.png" alt="" width="100" height="150" />
-          </td>
-          {dealerHand.cards.map(function (e) {
-            if (e.visible) {
-              return (
+          <thead>
+            <tr className="d-flex justify-content-center">
+              <td>
+                <img src="images/Empty.png" alt="" width="100" height="150" />
+              </td>
+              {dealerHand.cards.map(function (e) {
+                if (e.visible) {
+                  return (
+                    <td>
+                      <Container className="card p-0">
+                        <img src={e.image} alt="" width="100" height="150" />
+                      </Container>
+                    </td>
+                  );
+                } else {
+                  return (
+                    <td>
+                      <Container className="card p-0">
+                        <img
+                          src="images/Back_Covers/Pomegranate.png"
+                          alt=""
+                          width="100"
+                          height="150"
+                        />
+                      </Container>
+                    </td>
+                  );
+                }
+              })}
+              <td>
+                <img src="images/Empty.png" alt="" width="100" height="150" />
+              </td>
+            </tr>
+          </thead>
+        </table>
+        <h1 className="header">Your Hand &#40; {playerHand.value} &#41;</h1>
+        <table className="d-flex justify-content-center">
+          <thead>
+            <tr className="d-flex justify-content-center">
+              <td>
+                <img src="images/Empty.png" alt="" width="100" height="150" />
+              </td>
+              {playerHand.cards.map((e) => (
                 <td>
                   <Container className="card p-0">
                     <img src={e.image} alt="" width="100" height="150" />
                   </Container>
                 </td>
-              );
-            } else {
-              return (
-                <td>
-                  <Container className="card p-0">
-                    <img
-                      src="images/Back_Covers/Pomegranate.png"
-                      alt=""
-                      width="100"
-                      height="150"
-                    />
-                  </Container>
-                </td>
-              );
-            }
-          })}
-          <td>
-            <img src="images/Empty.png" alt="" width="100" height="150" />
-          </td>
-        </tr>
-        </thead>
-        </table>
-        <h1 className="header">Your Hand &#40; {playerHand.value} &#41;</h1>
-        <table className="d-flex justify-content-center">
-        <thead>
-        <tr className="d-flex justify-content-center">
-          <td>
-            <img src="images/Empty.png" alt="" width="100" height="150" />
-          </td>
-          {playerHand.cards.map((e) => (
-            <td>
-              <Container className="card p-0">
-                <img src={e.image} alt="" width="100" height="150" />
-              </Container>
-            </td>
-          ))}
-          <td>
-            <img src="images/Empty.png" alt="" width="100" height="150" />
-          </td>
-        </tr>
-        </thead>
+              ))}
+              <td>
+                <img src="images/Empty.png" alt="" width="100" height="150" />
+              </td>
+            </tr>
+          </thead>
         </table>
         <div
           className="d-flex justify-content-center p-2"
-          style={{ "fontSize": "24px" }}
+          style={{ fontSize: "24px" }}
         >
           Current Bet: {currentBet}
         </div>
@@ -591,13 +602,6 @@ function Game() {
                 >
                   Double
                 </button>
-                {/* <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => console.log("split")}
-          >
-            Split
-          </button> */}
               </div>
             </Row>
           </Container>
