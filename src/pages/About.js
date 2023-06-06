@@ -16,10 +16,12 @@ function About() {
         <div className="d-flex justify-content-center p-3">
           <h3> This app was created by Chase Smith</h3>
           </div>
-          <div className="d-flex justify-content-center p-3">
+          <Container className="bg-dark rounded-3">
+          <div className="d-flex justify-content-center">
           <a href="https://github.com/ChaseSmith67">
              https://github.com/ChaseSmith67 </a>
         </div>
+        </Container>
         </Col>
           <Col>
             <div className="d-flex justify-content-end">
