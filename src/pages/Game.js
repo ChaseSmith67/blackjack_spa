@@ -571,7 +571,7 @@ function Game() {
         </Col>
         <Col xs={4}>
           <Container>
-            <Row className="card bg-secondary p-2 m-2">
+            <Row className="card bg-secondary m-2">
               <h3 className="header">{message}</h3>
             </Row>
 
