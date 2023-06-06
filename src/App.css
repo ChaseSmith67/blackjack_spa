@@ -6,3 +6,13 @@
     margin: 50px;
     padding: 50px;
 }
+
+.light {
+  background-color: lightblue;
+  color: black;
+}
+
+.dark {
+  background-color: darkcyan;
+  color: white;
+}

@@ -6,7 +6,9 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { resetStats } from "./StatsService";
 
-function NavBar() {
+function NavBar(props) {
+  const toggle = () => props.toggle();
+
   return (
     <Navbar collapseOnSelect expand="xl" bg="dark" variant="dark">
       <Container>
@@ -20,7 +22,9 @@ function NavBar() {
               <NavDropdown.Item href="#action/3.2">
                 Another action
               </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+              <NavDropdown.Item>
+                <Button onClick={() => toggle()}>Change Theme</Button>
+              </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item>
                 <Button onClick={() => resetStats()}>Reset Statistics</Button>
