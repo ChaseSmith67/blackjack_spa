@@ -4,7 +4,8 @@
 
 This application is a simple web app intended to teach the
 user basic blackjack strategy. It was built for a Software
-Engineering course as my final project for the term.
+Engineering course as my final project for the term. The
+application is built with Node.JS, React.JS, and React-Bootstrap.
 
 ## Installation
 
