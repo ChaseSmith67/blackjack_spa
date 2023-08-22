@@ -10,9 +10,9 @@ Engineering course as my final project for the term.
 
 To install and run the application, you need to have Node 
 installed on your system. Clone the repository and run 
-npm install in the terminal to download and install all the
+'npm install' in the terminal to download and install all the
 necessary dependencies. Once the dependencies are intstalled,
-type node App.js to run the program. The application has a 
+type 'npm start' to run the program. The application has a 
 Tutorial Page that explains how to play the game.
 
 ## Known Issues and Limitations
